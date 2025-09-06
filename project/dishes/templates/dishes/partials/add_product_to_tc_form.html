@@ -1,0 +1,14 @@
+
+
+
+
+{% csrf_token %}
+<div id="formsetform">
+    <p class="input-group mb-3">
+        {{ formset.form.product }}
+        {{ formset.form.volume }}
+        <button type="button" class="btn btn-close"
+        hx-on="click:this.closest('p').remove()"></button>
+    </p>
+</div>
+

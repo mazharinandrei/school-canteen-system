@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}{% endblock %}
+{% block buttons %}
+{% endblock %}
+{% block content%}
+<div class="container">
+<select id="category_select"
+        name="category_select"
+        hx-get="{% url 'reports:generate_nutrients_normative_report' %}"
+        hx-include="[name='category_select']"
+        hx-target="#report_container"
+        hx-swap="innerHTML"
+        hx-trigger="input changed load delay:500ms"
+        class="form-select">
+    <option value="">Выберите категорию</option>
+    {% for student_feeding_category in student_feeding_categories %}
+        <option value="{{ student_feeding_category.id }}">{{ student_feeding_category }}</option>
+    {% endfor %}
+</select>
+</div>
+<div id="report_container">
+
+</div>
+{% endblock %}

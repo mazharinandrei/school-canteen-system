@@ -1,0 +1,14 @@
+
+{% csrf_token %}
+<div id="formsetform">
+    <p class="form_row">
+        <label for="{{ formset.form.product.id_for_label }}" style="display:block; margin-right: 10px;">{{ formset.form.product.label }}</label>
+        {{ formset.form.product }}
+        {{ formset.form.total_volume }}
+        {{ formset.form.cost }}
+        <button type="button"
+                class="btn-close"
+                hx-on="click:this.closest('p').remove()">
+        </button>
+    </p>
+</div>

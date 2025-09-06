@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}{% endblock %}
+
+{% block buttons %}
+
+{% endblock %}
+{% block content%}
+<table class="table table-striped">
+    <tr>
+        <th>Дата</th>
+        <th>Со склада</th>
+        <th>На склад</th>
+        <th>Сырьё</th>
+        <th>Количество, кг</th>
+        <th>Ответственный</th>
+        <th>Примечание</th>
+    </tr>
+    {% for transfer in transfers%}
+    <tr>
+        <td>{{ transfer.datetime|date:"d.m.y H:i" }}</td>
+        <td>{{ transfer.warehouse_from }}</td>
+        <td>{{ transfer.warehouse_to }}</td>
+        <td>{{ transfer.product }}</td>
+        <td>{{ transfer.volume }}</td>
+        <td>{{ transfer.staff.surname_and_initials }}</td>
+        {% if transfer.note %}
+            <td>{{ transfer.note }}</td>
+        {% else %}
+            <td>—</td>
+        {% endif %}
+
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

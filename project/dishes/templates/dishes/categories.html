@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}{% endblock %}
+
+
+{% block buttons %}
+{% if perms.dishes.add_foodcategory %}
+<a href="{% url 'dishes:create_category' %}" class="btn btn-primary">Добавить новую категорию</a>
+{% endif %}
+{% endblock %}
+
+{%block content %}
+<div class="masonry_grid">
+  {% for category in food_categories %}
+   <div class="content flow">
+       <h3 class="title"><a href="category={{category.id}}">{{ category }}</a></h3>
+   </div>
+  {% endfor %}
+</div>
+{% endblock %}

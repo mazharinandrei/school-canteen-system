@@ -1,0 +1,41 @@
+{% load widget_tweaks %} {% load crispy_forms_tags %} {% for meal_type in
+meal_types %}
+<div class="panel panel-default">
+  <div class="panel-heading">{{ meal_type.name }}</div>
+  <div class="panel-body">
+    <form
+      id="formsetform_{{ meal_type.id }}"
+      hx-target="#formsetform_{{ meal_type.id }}"
+      hx-swap="beforeend"
+    >
+      {% csrf_token %} {% for formset_form in
+      meal_type_dishes_formsets.meal_type.id %}
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-6">{{ formset_form.dish|crispy }}</div>
+
+          <div class="col-md-6">
+            {{ formset_form.volume_per_student|crispy }}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="btn-close"
+          hx-on="click:this.closest('div').remove()"
+        ></button>
+      </div>
+      {% endfor %}
+    </form>
+
+    <button
+      class="btn btn-outline-secondary"
+      hx-get="{% url 'main:add_dish_to_menu_requirement' %}"
+      hx-target="#formsetform_{{ meal_type.id }}"
+      hx-swap="beforeend"
+    >
+      Добавить блюдо
+    </button>
+  </div>
+</div>
+{% endfor %}

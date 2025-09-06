@@ -1,0 +1,50 @@
+{% extends 'form_layout_without_errors.html' %} {% block navigation %}
+<li class="breadcrumb-item">
+  <a href="{% url 'main:menus' %}">Все меню-требования</a>
+</li>
+{% endblock %} {% block form_elements %}
+
+<div class="input-group mb-3">{{ form.date }}</div>
+<p>
+  {% for error in form.date.errors %} {{ form.date.label}}: {{ error }} {%
+  endfor %}
+</p>
+
+<div class="input-group mb-3">
+  <label
+    class="input-group-text"
+    for="{{ form.student_feeding_category.id_for_label }}"
+    >{{ form.student_feeding_category.label }}:</label
+  >{{ form.student_feeding_category }} {{ form.students_number }}
+</div>
+
+<p>
+  {% for error in form.student_feeding_category.errors %} {{
+  form.student_feeding_category.label}}: {{ error }} {% endfor %}
+</p>
+<p>
+  {% for error in form.students_number.errors %} {{
+  form.students_number.label}}: {{ error }} {% endfor %}
+</p>
+
+<div class="input-group mb-3">{{ form.non_field_errors }}</div>
+
+{{ new_formset }}
+
+<div class="grid">
+  {% for el in m %}
+  <div class="content iwannatry">
+    <h3>{{ el.meal_type }}</h3>
+    {% include 'main/partials/add_dish_to_menu_requirement.html' %}
+    <button
+      class="btn btn-outline-secondary"
+      hx-get="/add_dish_to_menu_requirement/{{el.meal_type.id}}"
+      hx-target="#formsetform_{{el.meal_type.id}}"
+      hx-swap="beforeend"
+    >
+      Добавить блюдо
+    </button>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

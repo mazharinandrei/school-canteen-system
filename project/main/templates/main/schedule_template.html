@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}{% endblock %}
+{% block buttons %}
+{% endblock %}
+{% block content%}
+
+<form method="post">{% csrf_token %}
+    {% for el in form %}
+    <div class="input-group mb-3">
+     <label for="{{ el.id_for_label }}" class="input-group-text">{{ el.label }}</label>
+     {{ el }}
+    </div>
+    {% endfor %}
+  <input type="submit" value="Генерировать" class="btn btn-primary">
+</form>
+
+
+{% if products %}
+    <div class="content mb-3 mt-3">
+        <div class="toppanel">
+            <h4 class="title">Список продуктов на заказ</h4>
+            <a href="{% url 'export:products_calc' %}?start_date={{ start_date }}&end_date={{ end_date }}&student_feeding_category={{ student_feeding_category }}&planned_people_number={{ planned_people_number }}"
+               class="btn btn-primary">Скачать</a>
+        </div>
+
+      {% for product in products %}
+      <p>{{ product.product.name }} - {{ product.volume }} кг. </p>
+      {% endfor %}
+    </div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'form_layout.html' %}
+
+{% block navigation %}
+<li class="breadcrumb-item"><a href="{% url 'staff:all_staffs' %}">Все сотрудники</a></li>
+{% endblock %}
+
+{% block form_elements %}
+{% for element in form %}
+    <div class="input-group mb-3">
+        <span class="input-group-text">{{ element.label }}</span>
+        {{ element }}
+    </div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,46 @@
+{% for el in m %}
+<div class="content flow">
+  <h3 class="title">{{ el.week_day.1 }}</h3>
+  {% if el.composition %} {% for element in el.composition %} {% if
+  element.dishes %}
+  <h5>{{ element.meal_type }}</h5>
+  <ul>
+    {% for dish in element.dishes %}
+    <li>{{ dish.dish }} - {{ dish.volume_per_student }} гр.</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="nomenu">
+    <h3>❌</h3>
+    <p>Нет меню на этот день!</p>
+    <a
+      href="{% url 'main:create-cycle-menu-day' student_feeding_category=student_feeding_category week_number=week_number week_day=el.week_day.0 %}"
+      class="btn btn-primary"
+      >Добавить меню</a
+    >
+  </div>
+  {% endif %} {% endfor %} {% else %}
+  <div class="nomenu">
+    <h3>❌</h3>
+    <p>Нет меню на этот день!</p>
+    <a
+      href="{% url 'main:create-cycle-menu-day' student_feeding_category=student_feeding_category week_number=week_number week_day=el.week_day.0 %}"
+      class="btn btn-primary"
+      >Добавить меню</a
+    >
+  </div>
+
+  {% endif %}
+</div>
+{% endfor %}
+
+<style>
+  .nomenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    padding: 1em;
+  }
+</style>

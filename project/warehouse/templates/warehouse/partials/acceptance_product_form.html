@@ -1,0 +1,15 @@
+{% csrf_token %}
+<div id="formsetform">
+    <p class="input-group mb-3">
+
+        <select name="product" class="form-select">
+        {% for option in options %}
+            <option value="{{ option.id }}">{{ option.name }}</option>
+        {% endfor %}
+        </select>
+
+        {{ form.volume }}
+        <button type="button" class="btn-close"
+        hx-on="click:this.closest('p').remove()"></button>
+    </p>
+</div>

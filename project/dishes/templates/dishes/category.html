@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+
+{% block navigation %}
+<li class="breadcrumb-item"><a href="{% url 'dishes:all_food_categories' %}">Все категории</a></li>
+{% endblock %}
+
+
+{% block buttons %}
+    {% if perms.dishes.add_dish %}
+        <a href="{% url 'dishes:create_dish' %}" class="btn btn-primary">Добавить новое блюдо</a>
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+<div class="masonry_grid">
+{% for dish in dishes %}
+     <div class="content flow">
+        <h6 class="title">{{ dish }}</h6>
+      <div class="newclass">
+        {% include 'dishes/partials/dish_technological_map_list.html' %}
+
+        </div>
+     </div>
+{% endfor%}
+</div>
+{% endblock %}

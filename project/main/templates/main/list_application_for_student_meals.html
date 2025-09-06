@@ -1,0 +1,55 @@
+{% extends 'layout.html' %} {% block title %} {{ title }} {% endblock %} {%
+block navigation %} {% endblock %} {% block buttons %}
+<a
+  class="btn btn-primary"
+  href="{% url 'main:create_application_for_student_meals' %}"
+  >Добавить заявку</a
+>
+{% endblock %} {% block content%} {{ total_by_student_feeding_category2 }}
+
+<div class="card mb-3">
+  <div class="card-header">
+    <p class="fw-bold mb-0">Общее количество учащихся на {{ today }}</p>
+  </div>
+  <div class="card-body">
+    {% if total_by_student_feeding_category %}
+    <ul class="list-group list-group-flush">
+      {% for el in total_by_student_feeding_category %}
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between align-items-center">
+          <span
+            >{{ el.student_feeding_category }}: {% if el.total == 0 %}
+            <span class="text-danger fw-bold">{{ el.total }}</span>
+            {% else %} {{ el.total }} {% endif %} учащихся</span
+          >
+          {% if perms.main.add_menu_requirement and el.total > 0%}
+          <a
+            href="{% url 'main:create_menu_requirement' %}?student_feeding_category={{ el.student_feeding_category.id }}&date=today&students_number={{ el.total }}"
+            class="btn btn-outline-secondary"
+          >
+            Сформировать меню-требование
+          </a>
+          {% endif %}
+        </div>
+        <p>
+          Нет заявок от следующих классов: {% for grade in
+          el.grades_without_applications %}
+          <span class="text-danger fw-bold">{{ grade }};</span>
+          {% endfor %}
+        </p>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="mb-0">Нет заявок</p>
+
+    {% endif %}
+  </div>
+</div>
+
+<h4 class="title mb-3">Все заявки на питание учащихся</h4>
+
+<div id="application_list">
+  {% include 'main/partials/applications_for_student_meals_list.html' %}
+</div>
+{% endblock %}

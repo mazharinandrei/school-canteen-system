@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}
+
+{% endblock %}
+
+{% block buttons %}
+{% endblock %}
+{% block content%}
+<div class="content">
+    <div>
+        <p> <span style="font-weight: bold">Дата:</span> {{ application.date }}</p>
+        <p> <span style="font-weight: bold">Класс:</span> {{ application.grade }}</p>
+        <p> <span style="font-weight: bold">Количество учеников:</span> {{ application.students_number }}</p>
+    </div>
+    <div>
+        <a class="btn btn-primary" href="">Редактировать</a>
+        <a class="btn btn-danger" href="">Удалить</a>
+    </div>
+</div>
+{% endblock %}

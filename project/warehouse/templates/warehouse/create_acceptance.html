@@ -1,0 +1,44 @@
+{% extends 'form_layout_without_errors.html' %}
+
+{% block navigation %}
+<li class="breadcrumb-item"><a href="{% url 'warehouse:acceptance' %}">Все приёмы на склад</a></li>
+{% endblock %}
+
+{% block form_elements %}
+<div class="row">
+    <div class="col">
+        <p class="input-group mb-3">{{form.warehouse.errors}}</p>
+        <p class="input-group mb-3">{{ form.warehouse }}</p>
+        <p class="input-group mb-3">{{form.contract.errors}}</p>
+            <p class="input-group mb-3">
+            <select name="contract"
+                    class="form-select"
+                    hx-get="{% url 'warehouse:render-acceptance-form' %}"
+                    hx-include="[name='contract']"
+                    hx-target="#product_forms"
+                    hx-swap="innerHTML"
+                    hx-trigger="input changed load delay:500ms"
+            >
+                <option value="" disabled selected>Выберите договор:</option>
+                {% if actual_contracts %}
+                    {% for contract in actual_contracts %}
+                        <option value="{{ contract.id }}">{{ contract }}</option>
+                    {% endfor %}
+                {% else %}
+                    <option value="" disabled selected> Нет актуальных договоров для принятия на склад</option>
+                {% endif %}
+            </select>
+        </p>
+
+        <div id="product_forms">
+        </div>
+
+    </div>
+    <div class="col">
+        {{ form.note }}
+    </div>
+</div>
+
+
+
+{% endblock %}

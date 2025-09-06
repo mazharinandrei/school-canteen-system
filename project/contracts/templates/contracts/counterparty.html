@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}
+{% endblock %}
+{% block buttons %}
+{% endblock %}
+{% block content%}
+
+<div class="m-3">
+    <h5><span style="font-weight: bold">Наименование организации:</span> {{ counterparty.name }} </h5>
+    {% if counterparty.INN %}
+    <h5><span style="font-weight: bold">ИНН:</span> {{ counterparty.INN }} </h5>
+    {% endif %}
+    {% if counterparty.KPP %}
+    <h5><span style="font-weight: bold">КПП:</span> {{ counterparty.KPP }} </h5>
+    {% endif %}
+    {% if counterparty.address %}
+    <h5><span style="font-weight: bold">Адрес:</span> {{ counterparty.address }} </h5>
+    {% endif %}
+    {% if counterparty.note %}
+    <h5><span style="font-weight: bold">Примечание:</span> {{ counterparty.note }} </h5>
+    {% endif %}
+</div>
+{% if contracts %}
+    <h5 class="m-3" style="font-weight: bold">Договоры:</h5>
+    {% for contract in contracts %}
+        <div class="content mb-3" id="application_{{ contract.id }}">
+            <p>
+                <a class="title" href="/contracts/contract={{contract.id}}">{{ contract }} </a>
+                {% include 'contracts/partials/contract_info.html' %}
+
+            </p>
+            {% if contract.products.all %}
+                <p><span style="font-weight: bold">Продукты:</span> {% for product in contract.products.all %} {{ product.name.lower }}; {% endfor %}</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}

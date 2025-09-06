@@ -1,0 +1,19 @@
+{% if contract.get_composition %}
+    {% for contract_composition in contract.get_composition %}
+    <div>
+        {{ contract_composition.product }} - {{ contract_composition.unit_price }} ₽/кг
+        <div class="progress">
+            <div class="progress-bar"
+                 role="progressbar"
+                 style="width: {{ contract_composition.received_percent }}%"
+                 aria-valuenow="0"
+                 aria-valuemin="0"
+                 aria-valuemax="100">
+                {{ contract_composition.received_volume }} / {{ contract_composition.total_volume }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+<p>Нет продуктов</p>
+{% endif %}

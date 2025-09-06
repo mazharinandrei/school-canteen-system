@@ -1,0 +1,12 @@
+    <div class="col-md-3 text-end">
+        {% if user.is_authenticated %}
+
+            <form method="post" action="{% url 'staff:logout' %}">
+            {% csrf_token %}
+                {{ user.first_name }}
+            <button type="submit" class="btn btn-outline-danger btn-sm">Выйти</button>
+            </form>
+        {% else %}
+          <a href="{% url 'staff:login' %}" class="btn btn-outline-primary">Войти</a>
+        {% endif %}
+    </div>

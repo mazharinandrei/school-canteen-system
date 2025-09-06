@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}
+{% endblock %}
+{% block buttons %}
+<a href="{% url 'contracts:create_counterparty' %}" class="btn btn-primary">Добавить контрагента</a>
+{% endblock %}
+{% block content%}
+
+<ul>
+{% for counterparty in counterparties %}
+    <li><a href="{% url 'contracts:render_counterparty' counterparty.id %}">{{ counterparty }} </a></li>
+{% endfor %}
+</ul>
+{% endblock %}

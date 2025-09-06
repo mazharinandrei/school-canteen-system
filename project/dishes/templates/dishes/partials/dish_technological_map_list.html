@@ -1,0 +1,15 @@
+{% if dish.list_technological_maps %}
+    <ul>
+        {% for tm in dish.list_technological_maps %}
+            <li><a href="technological_map/{{ tm.id }}"> ТТК от {{ tm.date }} </a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <div class="alert alert-danger" role="alert">
+        У этого блюда нет ТТК!
+    </div>
+{% endif %}
+
+{% if perms.dishes.add_technologicalmap %}
+    <a class="btn btn-outline-secondary" href="technological_map/{{ dish.id }}/create">Добавить новую ТТК</a>
+{% endif %}

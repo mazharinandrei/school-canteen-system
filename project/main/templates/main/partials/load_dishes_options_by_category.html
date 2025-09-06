@@ -1,0 +1,5 @@
+<option value="">Выберите {{food_category}}...</option>
+{% for dish in dishes %}
+<option value="{{ dish.id }}">{{ dish.name }}</option>
+{% endfor %}
+

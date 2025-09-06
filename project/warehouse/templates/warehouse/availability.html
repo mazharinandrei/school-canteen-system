@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}{% endblock %}
+{% block buttons %}
+<a href="{% url 'warehouse:create_acceptance' %}" class="btn btn-primary">Принять на склад</a>
+<a href="{% url 'warehouse:create_write_off' %}" class="btn btn-primary">Списать со склада</a>
+<a href="{% url 'export:availability' %}" class="btn btn-outline-secondary">Экспорт</a>
+{% endblock %}
+{% block content%}
+
+    <table class="table table-striped">
+    <tr>
+        <th>Склад</th>
+        <th>Наименование продукта</th>
+        <th>Количество, кг</th>
+        <th>Требуемый минимум, кг</th>
+    </tr>
+    {% for availability in availabilities%}
+    <tr>
+        <td>{{ availability.warehouse }}</td>
+        <td>{{ availability.product }}</td>
+        <td>{{ availability.volume }}</td>
+        <td>
+            {% if availability.product_limit %}
+                {{ availability.product_limit.min_volume }}
+            {% else %}
+                —
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

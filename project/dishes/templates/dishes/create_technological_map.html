@@ -1,0 +1,58 @@
+{% extends 'form_layout_without_errors.html' %}
+
+{% block navigation %}
+<li class="breadcrumb-item"><a href="{% url 'dishes:all' %}">Все блюда</a></li>
+{% endblock %}
+
+
+{% block form_elements %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Левая колонка -->
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Дата:</label>
+            {{ form.date }}
+
+            <h3 class="">Состав:</h3>
+            {% include 'dishes/partials/add_product_to_tc_form.html' %}
+
+            <button class="btn btn-outline-secondary mt-2"
+                hx-get="{% url 'dishes:add-product-to-tm' %}"
+                hx-target="#formsetform"
+                hx-swap="beforeend">
+                Добавить продукт
+            </button>
+        </div>
+
+        <!-- Правая колонка -->
+        <div class="col-md-6 mt-5">
+            <table class="table table-sm table-bordered text-center">
+                <thead class="">
+                    <tr>
+                        <th>Белки</th>
+                        <th>Жиры</th>
+                        <th>Углеводы</th>
+                        <th>Калории</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ form.proteins }}</td>
+                        <td>{{ form.fats }}</td>
+                        <td>{{ form.carbohydrates }}</td>
+                        <td>{{ form.calories }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Вторая строка -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <h3>Технология приготовления</h3>
+            {{ form.recipe }}
+        </div>
+    </div>
+</div>
+{% endblock %}

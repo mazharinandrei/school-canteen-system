@@ -1,0 +1,14 @@
+{% extends 'form_layout.html' %}
+
+{% block navigation %}
+<li class="breadcrumb-item"><a href="{% url 'contracts:all_counterparties' %}">Все контрагенты</a></li>
+{% endblock %}
+
+{% block form_elements %}
+    {% for el in form %}
+        <div class="input-group mb-3">
+            <label for="{{ el.id_for_label }}" class="input-group-text">{{ el.label }}</label>
+            {{ el }}
+        </div>
+    {% endfor %}
+{% endblock %}

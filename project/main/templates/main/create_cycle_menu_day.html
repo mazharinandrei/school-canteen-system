@@ -1,0 +1,28 @@
+{% extends 'form_layout_without_errors.html' %}
+{% block navigation %}
+
+{% endblock %}
+
+
+{% block form_elements %}
+<h5 class="title">Неделя {{week_number}}, {{week_day.1}}, {{student_feeding_category.name}}</h5>
+<p><b>{{ cycle_menu_form.actual_since.label }}</b>
+    {{ cycle_menu_form.actual_since}}</p>
+
+    {% for meal_type in meal_types %}
+    <div class="content mb-3 mt-3">
+        <h3>{{ meal_type }}</h3>
+            {% for food_category in food_categories %}
+                <p
+                        class="form_row"
+                        hx-get="/load_cycle_menu_composition_custom_form/{{food_category.id}}&{{meal_type.id}}"
+                        hx-trigger="load"
+                        hx-swap="innerHTML"
+                >
+                </p>
+            {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+

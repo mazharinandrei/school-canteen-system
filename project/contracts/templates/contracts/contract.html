@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}
+<li class="breadcrumb-item"><a href="{% url 'contracts:all_contracts' %}">Все договоры</a></li>
+{% endblock %}
+{% block buttons %}
+
+{% endblock %}
+{% block content%}
+{% include 'contracts/partials/contract_info.html' %}
+
+{% if not contract.file %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+         {{ form.file }}
+        <button class="btn btn-outline-secondary"
+                type="submit"
+                id="submitBtn">Загрузить файл</button>
+        </div>
+    </form>
+{% endif %}
+
+<div class="content iwannatry" id="application_{{ contract.id }}">
+    <h3 class="title">Состав договора</h3>
+{% include 'contracts/partials/contract_composition.html' %}
+</div>
+{% endblock %}
+

@@ -1,0 +1,48 @@
+{% csrf_token %}
+<div id="formsetform">
+    <p class="input-group mb-3">
+
+        <select name="product" class="form-select">
+            <option value="" disabled selected>Выберите продукт...</option>
+            {% for option in options %}
+                <option value="{{ option.id }}">{{ option.name }}</option>
+            {% endfor %}
+        </select>
+
+        {{ form.volume }}
+        <button type="button" class="btn-close"
+        hx-on="click:this.closest('p').remove()"></button>
+    </p>
+</div>
+
+<div>
+    <button class="btn btn-outline-secondary"
+    hx-get="{% url 'warehouse:add-product-to-acceptance' %}"
+    hx-target="#formsetform"
+    hx-include="[name='contract']"
+    hx-swap="beforeend">Добавить продукт</button>
+</div>
+
+
+<script>
+document.querySelectorAll("#id_volume").forEach(input => {
+    input.addEventListener("input", function () {
+        let val = this.value.replace(/[^0-9,]/g, ""); // Удаляем всё, кроме цифр и точки
+        let parts = val.split(",");
+
+        if (parts[0].length > 6) {
+            // Если целая часть > 6 цифр, переносим лишние в дробную
+            parts[1] = (parts[1] || "") + parts[0].slice(6);
+            parts[0] = parts[0].slice(0, 6);
+        }
+
+        if (parts[1] && parts[1].length > 3) {
+            // Ограничиваем дробную часть 3 цифрами
+            parts[1] = parts[1].slice(0, 3);
+        }
+
+        this.value = parts.join(".");
+    });
+});
+
+</script>

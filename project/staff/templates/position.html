@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}
+{% endblock %}
+{% block buttons %}
+{% endblock %}
+{% block content%}
+<div class="m-3">
+    <h4>Сотрудники:</h4>
+    <ul>
+        {% for staff in staffs %}
+            <li><a href="/staff/staff/{{ staff.id }} ">{{ staff }} </a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

@@ -1,0 +1,190 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}
+<li class="breadcrumb-item"><a href="{% url 'main:menus' %}">Все меню</a></li>
+{% endblock %}
+{% block buttons %}
+<div class="dropdown dropstart">
+  <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    Экспорт
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    <li><a class="dropdown-item"
+           href="{% url 'export:menu' %}?date={{ menu_requirement.date|date:'Y-m-d' }}&student-feeding-category={{ menu_requirement.student_feeding_category.id }}"
+        >
+        Меню</a></li>
+    <li><a class="dropdown-item"
+           href="{% url 'export:menu_requirement' %}?date={{ menu_requirement.date|date:'Y-m-d' }}&student-feeding-category={{ menu_requirement.student_feeding_category.id }}"
+        >
+        Меню-требование</a></li>
+  </ul>
+</div>
+{% endblock %}
+
+{% block content%}
+{% if full_composition %}
+
+
+
+<div class="content mb-3 ">
+    <div class="card-body">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Количество учащихся: {{menu_requirement.students_number}}</li>
+        <li class="list-group-item">Категория питающихся: {{menu_requirement.student_feeding_category}}</li>
+        <li class="list-group-item">Полная стоимость меню:
+            {% if no_cost %}
+                {{ cost|floatformat:2 }} ₽ <span class="text-danger">(для некоторых блюд нет стоимости)</span>
+            {% else %}
+                {{ cost|floatformat:2 }} ₽
+            {% endif %}
+          </li>
+      </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        {% for el in menu_info %}
+        <div class="content mb-3">
+            <h3>{{ el.meal_type }}</h3>
+            {% for dish in el.dishes %}
+            <div class="newclass">
+            <p><a href="{% url 'dishes:technological_map' %}?dish={{ dish.dish.id }}">{{dish.dish}}</a> - {{dish.volume_per_student}} гр.
+                {% if dish.cost %}
+                    - {{dish.cost|floatformat:2}} ₽
+                {% else %}
+                    <span class="text-danger">(нет стоимости)</span>
+                {% endif %}
+
+            </p>
+
+            <p>
+                <a class="title"
+                   data-bs-toggle="collapse"
+                   href="#collapseExample_{{ el.meal_type }}_{{dish.dish.id}}"
+                   role="button" aria-expanded="false"
+                   aria-controls="collapseExample">
+                    Состав...
+                </a>
+            </p>
+            <div class="collapse" id="collapseExample_{{ el.meal_type }}_{{dish.dish.id}}">
+                <div class="card card-body">
+                {% if dish.composition %}
+                    <ul>
+                    {% for product in dish.composition %}
+                        <li>{{product.product}} - {{product.volume_per_portion|floatformat:2}} гр.
+                            {% if product.cost %}
+                                ({{product.cost|floatformat:2}} ₽)
+                            {% else %}
+                                <span class="text-danger">(нет стоимости)</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Нет ТТК!</p>
+                     <a class="btn btn-outline-secondary"
+                        href="/dishes/technological_map/{{ dish.dish.id }}/create">
+                         Добавить новую ТТК
+                     </a>
+                {% endif %}
+                </div>
+            </div>
+
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-6">
+            <div class="content mb-3">
+                <h3>Необходимые продукты</h3>
+                 <ul>
+                     {% for element in full_composition %}
+                     <li>{{ element.product }} - {{ element.volume|floatformat:2 }} гр.
+                         {% if element.cost %}
+                            ({{ element.cost|floatformat:2 }} ₽)
+                         {% else %}
+                            <span class="text-danger">(нет стоимости)</span>
+                         {% endif %}
+                     </li>
+                     {% endfor %}
+                 </ul>
+
+                {% if menu_requirement.is_issued and not menu_requirement.is_cooked %}
+                <button class="btn btn-primary"
+                        hx-on::after-request="document.getElementById('toast-body').innerText = event.detail.xhr.responseText;
+                            let toast = new bootstrap.Toast(document.getElementById('liveToast'));
+                            toast.show();
+                            this.disabled = true;"
+                            hx-post="{% url 'warehouse:cook_menu' %}"
+                            hx-target="#toast-body"
+                            hx-trigger="click"
+                            hx-vals='{"menu_requirement": "{{ menu_requirement.id }}"}'
+                >
+                    Списать продукты по приготовлению
+                </button>
+                {% elif not menu_requirement.is_issued %}
+                    <button
+                            class="btn btn-primary"
+                            hx-on::after-request="document.getElementById('toast-body').innerText = event.detail.xhr.responseText;
+                            let toast = new bootstrap.Toast(document.getElementById('liveToast'));
+                            toast.show();
+                            this.disabled = true;"
+                            hx-post="{% url 'warehouse:issue_menu' %}"
+                            hx-target="#toast-body"
+                            hx-trigger="click"
+                            hx-vals='{"menu_requirement": "{{ menu_requirement.id }}"}'
+                    >
+                        Отпустить на кухню
+                    </button>
+                {% endif %}
+             </div>
+
+            <div class="content mb-3">
+                    <table class="table">
+                        <tr>
+                            <th>Белки, г</th>
+                            <th>Жиры, г</th>
+                            <th>Углеводы, г</th>
+                            <th>Калорийность, Ккал</th>
+                        </tr>
+
+                        <tr>
+                            <td>{{ nutrients.proteins }}</td>
+                            <td>{{ nutrients.fats }}</td>
+                            <td>{{ nutrients.carbohydrates }}</td>
+                            <td>{{ nutrients.calories }}</td>
+                        </tr>
+                    </table>
+            </div>
+    </div>
+</div>
+
+{% else %}
+            <div class="alert alert-danger mb-3">
+                 <p>Невозможно посчитать КБЖУ и необходимые продукты, так как нет ТТК у следующих блюд:</h3>
+                     <ul>{% for dish in no_tm %}
+                         <li>
+                             <a href="/dishes/technological_map/{{ dish.id }}/create">
+                                 {{dish}}
+                             </a>
+                         </li>
+                         {% endfor %}</ul>
+            </div>
+{% endif %}
+ <!-- Bootstrap Toast -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Ответ сервера</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div id="toast-body" class="toast-body">
+                <!-- JSON-ответ появится здесь -->
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

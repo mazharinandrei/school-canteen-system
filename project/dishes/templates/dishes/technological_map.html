@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+
+{% block navigation %}{% endblock %}
+{% block buttons %}
+<a href="{% url 'export:tm' technological_map.id %}" class="btn btn-outline-secondary">Экспорт</a>
+{% endblock %}
+{% block content%}
+<div class="">
+  <div class="row m-1">
+      <div class="content col m-2 ">
+        <h3>Состав на 100 гр.</h3>
+          <table class="table table-sm">
+            <tr>
+              <th>Наименование сырья</th>
+              <th>Расход продуктов на 100 гр</th>
+            </tr>
+          {% for el in tm_composition %}
+            <tr>
+              <td>{{el.product}}</td>
+              <td>{{el.volume}} гр</td>
+            </tr>
+          {%endfor%}
+          </table>
+
+      </div>
+        <div class="content col  m-2">
+        <h3>Технология приготовления:</h3>
+        <div class="mt-3">
+          <p>{{ technological_map.recipe }}</p>
+        </div>
+      </div>
+    </div>
+  <div class="content col m-2">
+    <h3 class="mb-3">КБЖУ на 100 гр.</h3>
+    <table class="table table-sm">
+      <tr>
+        <th>Калории, ккал</th>
+        <th>Белки, г</th>
+        <th>Жиры, г</th>
+        <th>Углеводы, г</th>
+      </tr>
+      <tr>
+        <td>{{ technological_map.calories }}</td>
+        <td>{{ technological_map.proteins }}</td>
+        <td>{{ technological_map.fats }}</td>
+        <td>{{ technological_map.carbohydrates }}</td>
+      </tr>
+    </table>
+  </div>
+
+
+
+
+
+
+</div>
+
+{% endblock %}

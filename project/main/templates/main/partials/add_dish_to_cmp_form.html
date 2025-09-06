@@ -1,0 +1,14 @@
+
+<div id="formsetform{{day}}"> <p class="form_row">
+    <!--
+    <label for="{{ formset.form.dish.id_for_label }}" style="display:block; margin-right: 10px;">{{ formset.form.dish.label }}</label>
+    -->
+    {{ formset.form.dish }}
+    {{ formset.form.volume_per_student }}
+    <button type="button" class="btn-close"
+    hx-on="click:this.closest('p').remove()"></button>
+</p>
+
+</div>
+
+

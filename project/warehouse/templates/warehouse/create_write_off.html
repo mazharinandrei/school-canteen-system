@@ -1,0 +1,28 @@
+{% extends 'form_layout_without_errors.html' %}
+
+{% block navigation %}
+<li class="breadcrumb-item"><a href="{% url 'warehouse:write_off' %}">Все списания со складов</a></li>
+{% endblock %}
+
+{% block form_elements %}
+
+<div class="row">
+    <div class="col">
+        <p>{{form.warehouse.errors}} {{form.cause.errors}}</p>
+        <p class="input-group mb-3">
+            {{ form.warehouse }}
+            {{ form.cause }}
+        </p>
+                {% include 'warehouse/partials/write_off_form.html' %}
+                <div>
+                    <button class="btn btn-outline-secondary"
+                    hx-get="{% url 'warehouse:add-product-to-write_off' %}"
+                    hx-target="#formsetform"
+                    hx-swap="beforeend">Добавить продукт</button>
+                </div>
+    </div>
+    <div class="col">
+        {{ form.note }}
+    </div>
+</div>
+{% endblock %}

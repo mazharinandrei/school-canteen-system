@@ -1,0 +1,25 @@
+
+<p>
+    <span style="font-weight: bold">Дата:</span>
+    {{ contract.date }}
+</p>
+
+<p>
+    <span style="font-weight: bold">Ответственный:</span>
+    <a href="">{{ contract.staff }}</a>
+</p>
+<p>
+    <span style="font-weight: bold">Контрагент:</span>
+    <a href="">{{ contract.counterparty }}</a>
+</p>
+
+{% if contract.note %}
+<p>
+    <span style="font-weight: bold">Примечание:</span>
+    {{ contract.note }}
+</p>
+{% endif %}
+
+{% if contract.file %}
+    <p>Файл: <a href="{% url 'contracts:download_contract_file' contract.pk %}" download>Скачать</a></p>
+{% endif %}

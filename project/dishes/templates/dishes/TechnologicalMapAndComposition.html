@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}{% endblock %}
+{% block buttons %}
+{% endblock %}
+{% block content%}
+
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <table class="table-bordered">{{ composition_form.as_table }}</table>
+    <p><button type="submit">Сохранить</button></p>
+</form>
+{% endblock %}

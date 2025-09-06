@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}
+{% endblock %}
+{% block buttons %}
+<a href="{% url 'main:create_menu_requirement' %}" class="btn btn-primary">Сформировать меню-требование</a>
+{% endblock %}
+{% block content%}
+
+<ul>
+{% for menu in menus %}
+    <li><a href="{% url "main:menu" menu.date %}">Меню на {{ menu.date }}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}

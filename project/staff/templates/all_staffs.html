@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}
+{% endblock %}
+{% block buttons %}
+<a href="{% url 'staff:create_staff' %}" class="btn btn-primary">Добавить сотрудника</a>
+{% endblock %}
+{% block content%}
+
+<ul>
+{% for staff in staffs %}
+    <li><a href="/staff/staff/{{ staff.id }} ">{{ staff }} </a></li>
+{% endfor %}
+</ul>
+{% endblock %}

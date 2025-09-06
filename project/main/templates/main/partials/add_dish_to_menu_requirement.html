@@ -1,0 +1,30 @@
+{% if el.forms_for_meal_type %}
+<div id="formsetform_{{ el.id }}">
+    {% for form in el.forms_for_meal_type %}
+
+            <p class="form_row">
+                {{ form.management_form }}
+                {{ form.meal_type }}
+
+                {{ form.dish }}
+                {{ form.volume_per_student }}
+            <button type="button" class="btn-close"
+            hx-on="click:this.closest('p').remove()"></button>
+            </p>
+
+    {% endfor %}
+    </div>
+{% else %}
+<div id="formsetform_{{ el.id }}">
+    <p class="form_row">
+    {% csrf_token %}
+            {{ el.formset.management_form }}
+            {{ el.formset.meal_type }}
+
+            {{ el.formset.dish }}
+            {{ el.formset.volume_per_student }}
+    <button type="button" class="btn-close"
+    hx-on="click:this.closest('p').remove()"></button>
+    </p>
+</div>
+{% endif %}

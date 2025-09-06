@@ -1,0 +1,136 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}
+<li class="breadcrumb-item"></li>
+{% endblock %}
+{% block buttons %}
+{% endblock %}
+
+{% block content%}
+<div class="container">
+<div style="display:inline-block;">
+    <b>Категория питающихся</b>
+    <select
+            name="category_select"
+            hx-get="/cycle_menu_day/"
+            hx-include="[name='week_input'], [name='category_select']"
+            hx-target="#cyclemenu"
+            hx-swap="innerHTML"
+            hx-trigger="input changed load delay:500ms">
+        {% for category in student_feeding_categories %}
+            <option value="{{category.id}}">{{category.name}}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<div style="display:inline-block;">
+    <b>Номер недели</b>
+    <div class="number">
+        <button
+                class="number-minus"
+                type="button"
+                onclick="this.nextElementSibling.stepDown(); this.nextElementSibling.onchange();"
+
+                hx-get="/cycle_menu_day/"
+                hx-include="[name='week_input'], [name='category_select']"
+                hx-target="#cyclemenu"
+                hx-swap="innerHTML"
+        ><</button>
+        <input type="number"
+               name="week_input"
+               min="1" max="4"
+               value="1">
+        <button class="number-plus"
+                type="button"
+                onclick="this.previousElementSibling.stepUp(); this.previousElementSibling.onchange();"
+                hx-get="/cycle_menu_day/"
+                hx-include="[name='week_input'], [name='category_select']"
+                hx-target="#cyclemenu"
+                hx-swap="innerHTML"
+        >></button>
+    </div>
+</div>
+</div>
+
+<div class="container iwannatry">
+    <div
+            class="cyclemenugrid"
+            id="cyclemenu"
+            hx-trigger="load delay:100ms"
+            hx-get="/cycle_menu_day/"
+            hx-include="[name='week_input'], [name='category_select']">
+    </div>
+</div>
+
+
+
+<style>
+.cyclemenugrid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 30%);
+    gap: 1em;
+    margin: 0 auto;
+    max-width: 80rem;
+    margin-bottom: 1em;
+}
+
+
+
+
+.number {
+	display: inline-block;
+	position: relative;
+	width: 100px;
+}
+.number input[type="number"] {
+	display: block;
+	height: 32px;
+	line-height: 32px;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	text-align: center;
+	-moz-appearance: textfield;
+	-webkit-appearance: textfield;
+	appearance: textfield;
+}
+.number input[type="number"]::-webkit-outer-spin-button,
+.number input[type="number"]::-webkit-inner-spin-button {
+	display: none;
+}
+.number-minus {
+	position: absolute;
+	top: 1px;
+	left: 1px;
+	bottom: 1px;
+	width: 20px;
+	padding: 0;
+	display: block;
+	text-align: center;
+	border: none;
+	border-right: 1px solid #ddd;
+	font-size: 16px;
+	font-weight: 600;
+}
+.number-plus {
+	position: absolute;
+	top: 1px;
+	right: 1px;
+	bottom: 1px;
+	width: 20px;
+	padding: 0;
+	display: block;
+	text-align: center;
+	border: none;
+	border-left: 1px solid #ddd;
+	font-size: 16px;
+	font-weight: 600;
+}
+select {
+    width: 100px;
+    height: 30px;
+}
+</style>
+{% endblock %}
+

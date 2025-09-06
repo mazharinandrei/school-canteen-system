@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block navigation %}{% endblock %}
+{% block buttons %}
+<a href="{% url 'warehouse:create_write_off' %}" class="btn btn-primary">Списать со склада</a>
+<a href="{% url 'export:write_off' %}" class="btn btn-outline-secondary">Экспорт</a>
+{% endblock %}
+{% block content%}
+<table class="table table-striped">
+    <tr>
+        <th scope="col">Дата</th>
+        <th scope="col">Склад</th>
+        <th scope="col">Сырьё</th>
+        <th scope="col">Количество</th>
+        <th scope="col">Причина списания</th>
+        <th scope="col">Ответственный</th>
+        <th scope="col">Примечание</th>
+    </tr>
+    {% for write_off in write_offs%}
+    <tr>
+        <td>{{ write_off.datetime|date:"d.m.y H:i" }}</td>
+        <td>{{ write_off.warehouse }}</td>
+        <td>{{ write_off.product }}</td>
+        <td>{{ write_off.volume }}</td>
+        <td>{{ write_off.cause }}</td>
+        <td>{{ write_off.staff.surname_and_initials }}</td>
+        <td>{{ write_off.note }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

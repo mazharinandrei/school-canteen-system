@@ -1,0 +1,104 @@
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+{% if error %}
+    <div class="container">
+        <br>
+        <div class="alert alert-danger " role="alert">
+            <p class="text-center">{{ error }}</p>
+        </div>
+        <p class="text-center"><a href="" class="btn btn-primary">Сохранить</a></p>
+    </div>
+{% else %}
+    {% load mathfilters %}
+        <div class="container">
+            <table class="table">
+                <tr>
+                    <th>Калорийность, ккал</th>
+                    <th>Белки, г</th>
+                    <th>Жиры, г</th>
+                    <th>Углеводы, г</th>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Факт: {{ calories|floatformat:1 }}</p>
+                        <p>Норматив: {{ normative.calories|floatformat:1 }}</p>
+                    <td>
+                        <p>Факт: {{ proteins|floatformat:1 }}</p>
+                        <p>Норматив: {{ normative.proteins|floatformat:1 }}</p>
+                    </td>
+                    <td>
+
+                        <p>Факт: {{ fats|floatformat:1 }}</p>
+                        <p>Норматив: {{ normative.fats|floatformat:1 }}</p>
+                    </td>
+                    <td>
+
+                        <p>Факт: {{ carbohydrates|floatformat:1 }}</p>
+                        <p>Норматив: {{ normative.carbohydrates|floatformat:1 }}</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    <div class="container">
+             {% for cycle_menu in cyclic_menus %}
+
+                <div class="content mb-3">
+                    <h5 class="title">Неделя {{ cycle_menu.week_number }},
+                        {{ cycle_menu.get_week_day_display }}, {{ cycle_menu.meal_type }}
+                    </h5>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <ul>{% for dish in cycle_menu.get_composition %}
+                                <li>
+                                    <a class="title"
+                                       data-bs-toggle="collapse"
+                                       href="#collapse_{{ cycle_menu.week_number }}_{{ cycle_menu.week_day }}_{{ cycle_menu.meal_type.id }}_{{dish.id}}"
+                                       role="button"
+                                       aria-expanded="false"
+                                       aria-controls="collapseExample">
+                                        {{ dish.dish }}
+                                    </a>
+                                </li>
+                                <div class="collapse" id="collapse_{{ cycle_menu.week_number }}_{{ cycle_menu.week_day }}_{{ cycle_menu.meal_type.id }}_{{dish.id}}">
+                                    <table class="table">
+                                        <tr>
+                                            <th>Калории</th>
+                                            <th>Белки</th>
+                                            <th>Жиры</th>
+                                            <th>Углеводы</th>
+                                        </tr>
+                                        <tr>
+                                            {% for nutrient in dish.get_nutrients %}
+                                                <td>{{ nutrient|floatformat:1 }}</td>
+                                            {% endfor %}
+                                        </tr>
+                                    </table>
+                                </div>
+                            {% endfor %}</ul>
+                        </div>
+                        <div class="col-6">
+                            <table class="table">
+                                <tr>
+                                    <th>Калории</th>
+                                    <th>Белки</th>
+                                    <th>Жиры</th>
+                                    <th>Углеводы</th>
+                                </tr>
+                                <tr>
+                                    {% for nutrient in cycle_menu.get_nutrients %}
+                                        <td>{{ nutrient|floatformat:1 }}</td>
+                                    {% endfor %}
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+             {% endfor %}
+    </div>
+{% endif %}

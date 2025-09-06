@@ -1,0 +1,15 @@
+{% extends 'modal_layout.html' %}
+
+{% block modal-title %}Сформировать заявки{% endblock %}
+
+<form method="post">
+{% block modal-body %}
+
+        {% csrf_token %}
+        {{ form.as_p }}
+
+{% endblock %}
+{% block modal-buttons %}
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+{% endblock %}
+</form>

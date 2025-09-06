@@ -1,0 +1,32 @@
+{% if applications %} {% for application in applications %}
+<div class="content mb-3" id="application_{{ application.id }}">
+  <div>
+    <p><span style="font-weight: bold">Дата:</span> {{ application.date }}</p>
+    <p><span style="font-weight: bold">Класс:</span> {{ application.grade }}</p>
+    <p>
+      <span style="font-weight: bold">Количество учеников:</span> {{
+      application.students_number }}
+    </p>
+  </div>
+  {% if application.can_be_updated_or_deleted %}
+  <p>
+    <a
+      class="btn btn-danger"
+      hx-confirm="Вы действительно хотите удалить?"
+      hx-delete="{% url 'main:delete_application_for_student_meals' application.pk %}"
+      hx-target="#application_list"
+    >
+      Удалить</a
+    >
+  </p>
+  {% endif %}
+</div>
+{% endfor %}
+<div id="modal_form">
+  {% include 'main/partials/application_for_student_meals_modal_form.html' %}
+</div>
+{% else %}
+<div class="content">
+  <p>Нет заявок!</p>
+</div>
+{% endif %}
