@@ -1,0 +1,49 @@
+{% extends 'layout.html' %} {% block content %} {% load widget_tweaks %}
+<!---->
+{% csrf_token %}
+
+<div class="mt-5">
+  <!---->
+
+  <form method="post">
+    {% csrf_token %}
+    <div>
+      {% for error in form.non_field_errors %}
+      <li>{{ error }}</li>
+      {% endfor %}
+    </div>
+
+    {% for field in form %}
+
+    <div class="input-group mt-3">
+      {% if field.errors %}
+
+      <span class="input-group-text text-danger border-danger"
+        >{{field.label}}</span
+      >
+      {{field|add_class:"form-control border-danger"}}
+      <!---->
+      {% else %}
+      <span class="input-group-text"> {{field.label}} </span>
+      {{field|add_class:"form-control"}} {% endif %}
+    </div>
+    <div class="mb-3">
+      {% for error in field.errors %}
+      <span class="text-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+    {%endfor%}
+
+    <div>{% block extra %}{% endblock %}</div>
+
+    <div class="row">
+      <input
+        type="submit"
+        value="{% if button_text %} {{button_text}} {% else %} Сохранить {% endif %}"
+        class="btn btn-primary"
+      />
+    </div>
+  </form>
+</div>
+
+{% endblock %}

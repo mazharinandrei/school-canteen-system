@@ -16,7 +16,7 @@
         <th>Ответственный</th>
         <th>Примечание</th>
     </tr>
-    {% for transfer in transfers%}
+    {% for transfer in object_list%}
     <tr>
         <td>{{ transfer.datetime|date:"d.m.y H:i" }}</td>
         <td>{{ transfer.warehouse_from }}</td>

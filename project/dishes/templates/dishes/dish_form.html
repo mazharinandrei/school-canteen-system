@@ -1,9 +1,0 @@
-{% extends 'form_layout.html' %}
-
-{% block navigation %}
-<li class="breadcrumb-item"><a href="{% url 'dishes:all' %}">Все блюда</a></li>
-{% endblock %}
-
-{% block form_elements %}
-{{ form.as_p }}
-{% endblock %}

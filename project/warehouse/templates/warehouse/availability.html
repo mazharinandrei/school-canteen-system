@@ -15,7 +15,7 @@
         <th>Количество, кг</th>
         <th>Требуемый минимум, кг</th>
     </tr>
-    {% for availability in availabilities%}
+    {% for availability in object_list %}
     <tr>
         <td>{{ availability.warehouse }}</td>
         <td>{{ availability.product }}</td>

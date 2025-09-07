@@ -1,0 +1,15 @@
+{% extends 'layout.html' %} {% block content %}
+
+<div>{%block before_list %} {% endblock %}</div>
+<div class="container">
+  {% for object in object_list %}
+  <p>
+    <a href="{{ object.get_absolute_url }}">{{object}}</a>
+  </p>
+
+  {% empty %}
+  <p>Ничего не найдено</p>
+  {% endfor %} {% endblock %}
+</div>
+
+<div>{%block after_list %} {% endblock %}</div>

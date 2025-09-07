@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block title %} {{ title }} {% endblock %}
 {% block navigation %}
-<li class="breadcrumb-item"><a href="{% url 'main:menus' %}">Все меню</a></li>
+<li class="breadcrumb-item"><a href="{% url 'main:menu_requirement' %}">Все меню</a></li>
 {% endblock %}
 {% block buttons %}
 <div class="dropdown dropstart">
@@ -49,7 +49,7 @@
             <h3>{{ el.meal_type }}</h3>
             {% for dish in el.dishes %}
             <div class="newclass">
-            <p><a href="{% url 'dishes:technological_map' %}?dish={{ dish.dish.id }}">{{dish.dish}}</a> - {{dish.volume_per_student}} гр.
+            <p><a>{{dish.dish}} </a> - {{dish.volume_per_student}} гр.
                 {% if dish.cost %}
                     - {{dish.cost|floatformat:2}} ₽
                 {% else %}

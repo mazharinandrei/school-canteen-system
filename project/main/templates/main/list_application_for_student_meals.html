@@ -1,11 +1,11 @@
-{% extends 'layout.html' %} {% block title %} {{ title }} {% endblock %} {%
-block navigation %} {% endblock %} {% block buttons %}
+{% extends 'layout.html' %} {% block title %} {{ title }} {% endblock %} 
+{% block navigation %} {% endblock %} {% block buttons %}
 <a
   class="btn btn-primary"
   href="{% url 'main:create_application_for_student_meals' %}"
   >Добавить заявку</a
 >
-{% endblock %} {% block content%} {{ total_by_student_feeding_category2 }}
+{% endblock %} {% block content%} {{ total_by_student_feeding_category }}
 
 <div class="card mb-3">
   <div class="card-header">
@@ -32,8 +32,8 @@ block navigation %} {% endblock %} {% block buttons %}
           {% endif %}
         </div>
         <p>
-          Нет заявок от следующих классов: {% for grade in
-          el.grades_without_applications %}
+          Нет заявок от следующих классов: 
+          {% for grade in el.grades_without_applications %}
           <span class="text-danger fw-bold">{{ grade }};</span>
           {% endfor %}
         </p>

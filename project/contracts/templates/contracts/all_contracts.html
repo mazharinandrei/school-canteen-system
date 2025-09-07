@@ -1,24 +1,32 @@
-{% extends 'layout.html' %}
-{% block title %} {{ title }} {% endblock %}
-{% block navigation %}
-{% endblock %}
+{% extends 'layout.html' %} {% block title %} {{ title }} {% endblock %}
+{% block navigation %} {% endblock %}
+
+
 {% block buttons %}
-<a href="{% url 'contracts:create_contract' %}" class="btn btn-primary">Добавить договор</a>
+<a href="{% url 'contracts:create_contract' %}" class="btn btn-primary"
+  >Добавить договор</a
+>
 {% endblock %}
+
+
 {% block content%}
-
 <ul>
-{% for contract in contracts %}
-    <div class="content iwannatry" id="application_{{ contract.id }}">
-        <p>
-            <a class="title" href="/contracts/contract={{contract.id}}">{{ contract }} </a>
-            {% include 'contracts/partials/contract_info.html' %}
+  {% for contract in object_list %}
+  <div class="content iwannatry" id="application_{{ contract.id }}">
+    <p>
+      <a class="title" href="{{contract.get_absolute_url}}">{{ contract }} </a>
+      {% include 'contracts/partials/contract_info.html' %}
+    </p>
+    {% if contract.products.all %}
+    <p>
+      <span style="font-weight: bold">Продукты:</span>
 
-        </p>
-        {% if contract.products.all %}
-            <p><span style="font-weight: bold">Продукты:</span> {% for product in contract.products.all %} {{ product.name.lower }}; {% endfor %}</p>
-        {% endif %}
-    </div>
-{% endfor %}
+      {% for product in contract.products.all %}
+
+      {{ product.name.lower }}; {% endfor %}
+    </p>
+    {% endif %}
+  </div>
+  {% endfor %}
 </ul>
 {% endblock %}

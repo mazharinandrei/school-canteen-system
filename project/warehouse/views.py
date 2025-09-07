@@ -8,6 +8,8 @@ from django.forms import IntegerField
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
+from project.views import ProjectBaseListView
+
 from .forms import AcceptanceForm, NewWriteOffForm
 from .models import Acceptance, WriteOff, Availability, Warehouse, ProductTransfer, WriteOffCause, ProductLimit
 from contracts.models import Contract
@@ -19,16 +21,41 @@ from staff.models import get_staff_by_user
 
 from .services.warehouse_transactions import product_transfer, write_off_from_warehouse
 
+class WarehouseListView(ProjectBaseListView):
+    """
+    Mixin-ListView для всех ListView складских перемещений
+    """
+    # TODO: общий template
+    def get_queryset(self):
+        queryset = super().get_queryset()
 
-# Create your views here.
-@login_required
-def render_all_acceptances(request):
-    acceptances = Acceptance.objects.all().order_by('-datetime')[:100]
-    context = {
-        "title": "Приём на склад",
-        "acceptances": acceptances,
-    }
-    return render(request, "warehouse/acceptance.html", context)
+        if self.request.GET.get('warehouse'):
+            queryset = queryset.filter(warehouse=self.request.GET.get('warehouse'))
+        
+        if self.request.GET.get('product'):
+            queryset = queryset.filter(warehouse=self.request.GET.get('product'))
+
+        return queryset
+
+class AcceptanceListView(WarehouseListView):
+    model = Acceptance
+    ordering = ['-datetime'] # TODO: пока так, но потом нужно сделать универсальным
+    template_name = "warehouse/acceptance.html"
+
+class WriteOffListView(WarehouseListView):
+    model = WriteOff
+    ordering = ['-datetime'] # TODO: пока так, но потом нужно сделать универсальным
+    template_name = "warehouse/write_off.html"
+
+class AvailabilityListView(WarehouseListView):
+    model = Availability
+    template_name = "warehouse/availability.html"
+
+
+class ProductTransferListView(ProjectBaseListView):
+    model = ProductTransfer
+    ordering = '-datetime' # TODO: пока так, но потом нужно сделать универсальным
+    template_name = "warehouse/transfers.html"
 
 
 def load_products_for_acceptance(request):
@@ -96,17 +123,6 @@ def add_product_to_acceptance(request):
 
 
 @login_required
-@permission_required('warehouse.view_writeoff')
-def render_all_write_off(request):
-    write_offs = WriteOff.objects.all().order_by('-datetime')
-    context = {
-        "title": "Списания со складов",
-        "write_offs": write_offs,
-    }
-    return render(request, "warehouse/write_off.html", context)
-
-
-@login_required
 @permission_required('warehouse.add_writeoff')
 def create_write_off(request):
     if request.method == "POST":
@@ -152,29 +168,6 @@ def add_product_to_write_off(request):
     return render(request,
                   'warehouse/partials/write_off_form.html',
                   {'form': NewWriteOffForm()})
-
-
-@login_required
-def render_availability(request):
-    availabilities = Availability.objects.all()
-    if request.GET.get('warehouse'):
-        availabilities = availabilities.filter(warehouse=request.GET.get('warehouse'))
-
-    if request.GET.get('product'):
-        availabilities = availabilities.filter(product=request.GET.get('product'))
-
-    for availability in availabilities:
-        try:
-            product_limit = ProductLimit.objects.get(product=availability.product, warehouse=availability.warehouse)
-            availability.product_limit = product_limit
-        except ProductLimit.DoesNotExist:
-            availability.product_limit = None
-
-    context = {
-        "title": "Наличие сырья на складах",
-        "availabilities": availabilities,
-    }
-    return render(request, "warehouse/availability.html", context)
 
 
 @transaction.atomic
@@ -236,12 +229,3 @@ def cook_menu(request):
             return HttpResponse("Ошибка!")
 
     return HttpResponse("Ошибка!")
-
-
-def render_transfers(request):
-    transfers = ProductTransfer.objects.all().order_by('-datetime')[:100]
-    context = {
-        "title": "Перемещения между складами",
-        "transfers": transfers,
-    }
-    return render(request, "warehouse/transfers.html", context)

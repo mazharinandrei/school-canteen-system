@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 # Create your models here.
@@ -13,6 +14,9 @@ class Positions(models.Model):
     class Meta:
         verbose_name = 'Должность'
         verbose_name_plural = 'Должности'
+    
+    def get_absolute_url(self):
+        return reverse("staff:render_position", args=[self.pk])
 
 
 class Staff(models.Model):
@@ -42,6 +46,9 @@ class Staff(models.Model):
             return self.surname + " " + self.name[0] + "." + self.second_name[0] + "."
         else:
             return self.surname + " " + self.name[0] + "."
+
+    def get_absolute_url(self):
+        return reverse("staff:render_staff", args=[self.pk])
 
     class Meta:
         verbose_name = 'Сотрудник'

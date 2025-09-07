@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from django.db import models
 from django.db.models import Avg
+from django.urls import reverse_lazy
 from django.utils.timezone import localdate
 
 
@@ -19,6 +20,9 @@ class FoodCategory(models.Model):  # TODO: добавить slug
 
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse_lazy("dishes:food_category", args=[self.pk])
 
 
 # Конкретное блюдо
@@ -27,7 +31,10 @@ class Dish(models.Model):
                             max_length=100,
                             blank=False)
 
-    category = models.ForeignKey(FoodCategory, blank=True, null=True, on_delete=models.DO_NOTHING, verbose_name='Категория')
+    category = models.ForeignKey(FoodCategory, blank=True, null=True, 
+                                 on_delete=models.PROTECT, 
+                                 verbose_name='Категория',
+                                 related_name="dishes")
 
     class Meta:
         verbose_name = 'Блюдо'
@@ -111,8 +118,15 @@ class TechnologicalMap(models.Model):
 
 
 class TechnologicalMapComposition(models.Model):
-    technological_map = models.ForeignKey(TechnologicalMap, on_delete=models.PROTECT)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    technological_map = models.ForeignKey(
+        TechnologicalMap, 
+        on_delete=models.PROTECT, 
+        related_name="composition")
+    
+    product = models.ForeignKey(
+        Product, 
+        on_delete=models.PROTECT)
+    
     volume = models.DecimalField(max_digits=5, decimal_places=2)
 
     # TODO: единица измерения

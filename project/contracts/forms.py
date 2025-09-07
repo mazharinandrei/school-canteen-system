@@ -5,30 +5,6 @@ from .models import Contract, Counterparty, ContractComposition
 from staff.models import Staff
 
 
-class CounterpartyForm(forms.ModelForm):
-    class Meta:
-        model = Counterparty
-        fields = ("name", "address", "INN", "KPP")
-        widgets = {
-            'name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Название',
-            }),
-            'address': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Адрес'
-            }),
-            'INN': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'ИНН'
-            }),
-            'KPP': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'КПП'
-            }),
-        }
-
-
 class ContractForm(forms.ModelForm):
     #staff = forms.ModelChoiceField(queryset=Staff.objects.all(), widget=forms.HiddenInput(), required=False)
     class Meta:

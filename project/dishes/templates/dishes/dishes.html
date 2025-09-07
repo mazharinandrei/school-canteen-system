@@ -1,35 +1,28 @@
-{% extends 'layout.html' %}
-{% block title %} {{ title }} {% endblock %}
-{% block navigation %}{% endblock %}
-
-
-{% block buttons %}
-  {% if perms.dishes.add_dish %}
-      <a href="{% url 'dishes:create_dish' %}" class="btn btn-primary">Добавить новое блюдо</a>
-      <a href="{% url 'export:dishes' %}" class="btn btn-outline-secondary">Экспорт</a>
-  {% endif %}
-{% endblock %}
-
-
-{% block content%}
+{% extends 'layout.html' %} {% block title %} {{ title }} {% endblock %}
+<!---->
+{% block navigation %}{% endblock %} {% block buttons %}
+<!---->
+{% if perms.dishes.add_dish %}
+<a href="{% url 'dishes:create_dish' %}" class="btn btn-primary"
+  >Добавить новое блюдо</a
+>
+<a href="{% url 'export:dishes' %}" class="btn btn-outline-secondary"
+  >Экспорт</a
+>
+{% endif %} {% endblock %} {% block content%}
 <div class="masonry_grid">
-  {% for category, dishes in data.items %}
+  {% for category in object_list%}
   <div class="content flow">
-
-    <h3 class="title" ><a href="category={{category.id}}">{{ category }}</a></h3>
+    <h3 class="title"><a href="category={{category.id}}">{{ category }}</a></h3>
     <!-- Создать новое блюдо в категории  -->
-
-  {% for dish in dishes %}
+    {% for dish in category.dishes.all %}
     <div class="newclass">
       <span class="bold">{{ dish }}</span>
       {% include 'dishes/partials/dish_technological_map_list.html' %}
     </div>
-  {% endfor %}
-
+    {% endfor %}
   </div>
   {% endfor %}
-
 </div>
-
 
 {% endblock %}

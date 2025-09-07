@@ -1,42 +1,40 @@
 from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.views import LoginView
-from django.shortcuts import render, redirect
 
-from .forms import PositionForm, StaffForm, LoginUserForm
+from django.shortcuts import render
+from django.urls import reverse_lazy
+
+from project.views import ProjectBaseCreateView, ProjectBaseDetailView, ProjectBaseListView
+
 from .models import Staff, Positions
 from contracts.models import Contract
 
-
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import PermissionRequiredMixin
 # Create your views here.
 
-@login_required
-@permission_required('staff.view_staff')
-def render_all_staffs(request):
-    staffs = Staff.objects.all()
-    context = {
-        "title": "Все сотрудники",
-        "staffs": staffs,
+"""
+LIST VIEWS 
+"""
 
-    }
-    return render(request, "all_staffs.html", context)
+class StaffListView(ProjectBaseListView):
+    model = Staff
 
 
-@login_required
-@permission_required('staff.add_staff')
-def create_staff(request):
-    form = StaffForm()
-    if request.method == 'POST':
-        form = StaffForm(request.POST)
-        if form.is_valid():
-            n = form.save()
-            return redirect("/staff/all_staff/")
-    else:
-        context = {
-            "title": "Добавить сотрудника",
-            "form": form,
-        }
-    return render(request, "create_staff.html", context)
+class PositionListView(ProjectBaseListView):
+    model = Positions
+
+
+class StaffCreateView(ProjectBaseCreateView): # создание пользователя врядли должно так выглядеть
+    model = Staff
+    'staff.add_staff'
+    fields = ("surname", "name", "second_name", "position", "note")
+
+
+class PositionCreateView(ProjectBaseCreateView):
+    'staff.add_position'
+    model = Positions
+
 
 @permission_required('staff.view_staff')
 def render_staff(request, staff_id):
@@ -61,33 +59,18 @@ def render_position(request, position_id):
     }
     return render(request, "position.html", context)
 
-@permission_required('staff.view_position')
-def render_all_positions(request):
-    positions = Positions.objects.all()
-    context = {
-        "title": "Все должности",
-        "positions": positions,
-    }
-    return render(request, "all_positions.html", context)
-
-@permission_required('staff.add_position')
-def create_position(request):
-    form = PositionForm()
-
-    if request.method == 'POST':
-        form = PositionForm(request.POST)
-        if form.is_valid():
-            n = form.save()
-            return redirect("/staff/all_positions/")
-    else:
-        context = {
-            "title": "Добавить должность",
-            "form": form,
-        }
-        return render(request, "create_position.html", context)
+class PositionDetailView(ProjectBaseDetailView):
+    model = Positions
+    def get_context_data(self, **kwargs):
+        con = super().get_context_data(**kwargs)
+        print(self.__dict__)
+        return con
 
 
 class LoginUser(LoginView):
-    form_class = LoginUserForm
-    template_name = 'login.html'
-    extra_context = {'title': 'Авторизация'}
+    form_class = AuthenticationForm
+    template_name = "base_form.html"
+    extra_context = {'title': "Вход", "button_text": "Войти"}
+    
+    def get_success_url(self):
+        return reverse_lazy('main:home')
