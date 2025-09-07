@@ -5,8 +5,10 @@ from django.contrib.auth.decorators import permission_required, login_required
 from django.forms import formset_factory
 
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.timezone import localdate
+
+from project.views import ProjectBaseCreateView, ProjectBaseDetailView, ProjectBaseListView
 
 from .forms import (OrderCalculationForm, MenuRequirementForm, \
                     menu_requirement_composition_formset, MenuRequirementCompositionForm,
@@ -29,15 +31,10 @@ from .services.products_calc import products_calc_by_date_interval, get_cycle_me
 def index(request):
     return render(request, 'main/index.html')
 
-
-@login_required
-def render_all_menus_requirements(request):
-    menus = MenuRequirement.objects.all().order_by('-date')
-    context = {
-        "title": "Все меню",
-        "menus": menus,
-    }
-    return render(request, 'main/menus.html', context)
+class MenuRequirementListView(ProjectBaseListView):
+    model = MenuRequirement
+    template_name = "base_list.html"
+    ordering = ['-date'] #TODO: унифицировать
 
 
 def render_menu(request, date):
@@ -138,12 +135,7 @@ def generate_schedule(request):
 
 
 @login_required
-def acceptance(request):
-    return render(request, 'main/acceptance.html')
-
-
-@login_required
-def render_cycle_menu(request):
+def render_cycle_menu(request): #TODO: очень неочевидные вещи в контексте
     student_feeding_categories = StudentFeedingCategory.objects.all()
     context = {
         "title": "Цикличное меню",
@@ -318,38 +310,24 @@ def add_dish_to_menu_requirement(request, meal_type_id):
     return render(request, 'main/partials/add_dish_to_menu_requirement.html', context)
 
 
-@login_required
-@permission_required('main.add_applicationforstudentmeals')
-def create_application_for_student_meals(request):
-    if request.method == 'POST':
-        form = ApplicationForStudentMealsForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-            return redirect(reverse('main:applications_for_student_meals'))
-    else:
-        form = ApplicationForStudentMealsForm()
-
-    context = {
-        "title": "Заявка на питание учеников",
-        "form": form,
-    }
-    return render(request, "main/create_or_update_application_for_student_meals.html", context)
+class ApplicationCreateView(ProjectBaseCreateView):
+    model = ApplicationForStudentMeals
+    form_class = ApplicationForStudentMealsForm
+    fields = None
+    success_url = reverse_lazy('main:applications_for_student_meals')
 
 
-@login_required
-def render_applications_for_student_meals_list(request):
-    total_by_student_feeding_category = get_total_by_student_feeding_category()
-
-    application_for_student_meals = ApplicationForStudentMeals.objects.all().order_by('-date', 'grade')
-
-    context = {
-        "title": "Заявки на питание учеников",
-        "applications": application_for_student_meals,
-        'total_by_student_feeding_category': total_by_student_feeding_category,
-        'today': localdate() + timedelta(days=1),
-    }
-    return render(request, "main/list_application_for_student_meals.html", context)
+class ApplicationListView(ProjectBaseListView):
+    model = ApplicationForStudentMeals
+    #permission_required = "" # TODO
+    ordering = ('-date', 'grade')
+    template_name = "main/list_application_for_student_meals.html" # TODO: переделать
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_by_student_feeding_category'] = get_total_by_student_feeding_category()
+        context['today'] = localdate() + timedelta(days=1), # TODO: если это завтра, почему это today?
+        return context
 
 
 def render_application_for_student_meals(request, application_id):

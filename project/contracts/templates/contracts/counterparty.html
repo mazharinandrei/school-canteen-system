@@ -21,12 +21,13 @@
     <h5><span style="font-weight: bold">Примечание:</span> {{ counterparty.note }} </h5>
     {% endif %}
 </div>
-{% if contracts %}
+
+{% if counterparty.contracts.all %}
     <h5 class="m-3" style="font-weight: bold">Договоры:</h5>
-    {% for contract in contracts %}
+    {% for contract in counterparty.contracts.all %}
         <div class="content mb-3" id="application_{{ contract.id }}">
             <p>
-                <a class="title" href="/contracts/contract={{contract.id}}">{{ contract }} </a>
+                <a class="title" href="{{contract.get_absolute_url}}">{{ contract }} </a>
                 {% include 'contracts/partials/contract_info.html' %}
 
             </p>

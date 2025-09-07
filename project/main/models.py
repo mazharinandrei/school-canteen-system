@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from dishes.models import Dish
 from django.utils.timezone import localdate
 from datetime import timedelta
@@ -153,11 +154,15 @@ class CycleMenuComposition(models.Model):
 
 class MenuRequirement(models.Model):
     date = models.DateField(validators=[MinValueValidator(localdate())], verbose_name="Дата требования")
+    
     is_issued = models.BooleanField(default=False)
     is_cooked = models.BooleanField(default=False)
-    student_feeding_category = models.ForeignKey(StudentFeedingCategory,
-                                                 on_delete=models.PROTECT,
-                                                 verbose_name="Категория питающихся")
+    
+    student_feeding_category = models.ForeignKey(
+        StudentFeedingCategory,
+        on_delete=models.PROTECT,
+        verbose_name="Категория питающихся")
+    
     students_number = models.IntegerField(validators=[MinValueValidator(1)], verbose_name="Количество учеников")
 
     dishes = models.ManyToManyField(
@@ -166,7 +171,10 @@ class MenuRequirement(models.Model):
         through_fields=('menu_requirement', 'dish'))
 
     def __str__(self):
-        return f"Меню на {self.date}"
+        return f"Меню на {self.date} для категории {self.student_feeding_category}"
+    
+    def get_absolute_url(self):
+        return reverse("main:menu", args=[self.date])
 
     class Meta:
         verbose_name = 'Меню-требование'

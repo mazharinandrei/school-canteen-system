@@ -15,7 +15,7 @@
 
 {% block content %}
 <div class="masonry_grid">
-{% for dish in dishes %}
+{% for dish in object.dishes.all %}
      <div class="content flow">
         <h6 class="title">{{ dish }}</h6>
       <div class="newclass">

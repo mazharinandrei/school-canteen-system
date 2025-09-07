@@ -125,12 +125,6 @@ class CycleMenuCustomForm(forms.Form):
                                    )
 
 
-class ProductApplicationForm(forms.Form):
-    date = forms.DateField()
-    dish = forms.ModelChoiceField(queryset=Dish.objects.all())
-    count = forms.DecimalField()
-
-
 class ApplicationForStudentMealsForm(forms.ModelForm):
     date = forms.DateField(initial=(localdate() + timedelta(days=1)).strftime('%Y-%m-%d'),
                            widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),

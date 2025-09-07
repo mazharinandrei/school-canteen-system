@@ -5,29 +5,6 @@ from django.views.generic import CreateView, UpdateView
 from .models import TechnologicalMapComposition, Dish, TechnologicalMap, Product
 
 
-class DishForm(forms.ModelForm):
-    class Meta:
-        model = Dish
-        fields = ['name', 'category']  # TODO: category
-        widgets = {
-            'name': TextInput(attrs={
-                'label': '',
-                'placeholder': 'Название блюда',
-                'class': 'form-control',
-            }),
-            'category': Select(attrs={
-                'class': 'form-select',
-                'label': 'Категория блюда',
-            }),
-
-        }
-
-class TechnologicalMapUpdateView(UpdateView):  # TODO: не обновить ТК, а создать новую на основе старой мб
-    model = TechnologicalMap
-    fields = ["date", 'dish', 'calories', 'proteins', 'fats', 'carbohydrates', 'recipe', 'products']
-    template_name_suffix = "_update_form"
-
-
 class TechnologicalMapForm(forms.ModelForm):
     class Meta:
         model = TechnologicalMap

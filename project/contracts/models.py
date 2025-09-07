@@ -2,6 +2,7 @@ from decimal import Decimal, InvalidOperation
 
 from django.db import models
 from django.db.models import Avg, ExpressionWrapper, F, IntegerField, FloatField
+from django.urls import reverse
 
 from staff.models import Staff
 
@@ -25,6 +26,9 @@ class Counterparty(models.Model):  # Контрагенты
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse("contracts:render_counterparty", args=[self.pk])
+
     class Meta:
         verbose_name = 'Контрагент'
         verbose_name_plural = 'Контрагенты'
@@ -33,7 +37,7 @@ class Counterparty(models.Model):  # Контрагенты
 class Contract(models.Model):
     date = models.DateField()
     staff = models.ForeignKey(Staff, on_delete=models.PROTECT, blank=True, null=True, default=2)
-    counterparty = models.ForeignKey(Counterparty, on_delete=models.PROTECT)
+    counterparty = models.ForeignKey(Counterparty, on_delete=models.PROTECT, related_name="contracts")
     is_actual = models.BooleanField(blank=True, null=True, default=True)
     file = models.FileField(upload_to='contracts/contracts_files', blank=True, null=True)
     products = models.ManyToManyField(
@@ -57,6 +61,9 @@ class Contract(models.Model):
                 output_field=FloatField()
             )
         )
+
+    def get_absolute_url(self):
+        return reverse("contracts:render_contract", args=[self.pk])
 
     class Meta:
         verbose_name = 'Договор'

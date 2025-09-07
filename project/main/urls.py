@@ -5,16 +5,12 @@ app_name = "main"
 
 urlpatterns = [
     path('', views.index, name='home'),
+    path('menu_requirement/', views.MenuRequirementListView.as_view(), name='menu_requirement'),  # TODO: меню и меню-требования это разные вещи
+    path('menu/<str:date>/', views.render_menu, name='menu'), #TODO: detailview
 
     path('menu/today/', views.render_today_menu_requirement, name="today_menu_requirement"),
-    path('menu/', views.render_all_menus_requirements, name='menus'),  # TODO: меню и меню-требования это разные вещи
-    path('menu/<str:date>/', views.render_menu, name='menu'),
-
-    path('menu_requirement', views.render_all_menus_requirements, name='menu_requirement'),
 
     path('products-calc', views.generate_schedule, name='products_calc'),
-
-    path('acceptance', views.acceptance, name='acceptance'),
 
     path('cycle-menu', views.render_cycle_menu, name='cycle_menu'),
 
@@ -30,13 +26,13 @@ urlpatterns = [
          views.load_cycle_menu_composition_custom_form, name="load_cycle_menu_composition_custom_form"),
 
     path("create-application-for-student-meals",
-         views.create_application_for_student_meals, name="create_application_for_student_meals"),
-    path("applications-for-student-meals",
-         views.render_applications_for_student_meals_list, name="applications_for_student_meals"),
-    path("applications-for-student-meals/<int:application_id>",
-         views.render_application_for_student_meals, name="application_for_student_meals"),
+         views.ApplicationCreateView.as_view(), name="create_application_for_student_meals"),
+    
+    path("applications/", views.ApplicationListView.as_view(), name="applications_for_student_meals"),
+   
     path("delete-application-for-student-meals/<int:pk>",
          views.delete_application_for_student_meals, name="delete_application_for_student_meals"),
+    
     path("render-edit-application-for-student-meals-modal-form/<int:pk>",
          views.render_application_for_student_meals_modal_form,
          name="edit_application_for_student_meals_modal_form"),

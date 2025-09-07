@@ -1,13 +1,12 @@
 {% extends 'form_layout_without_errors.html' %} {% block navigation %}
 <li class="breadcrumb-item">
-  <a href="{% url 'main:menus' %}">Все меню-требования</a>
+  <a href="{% url 'main:menu_requirement' %}">Все меню-требования</a>
 </li>
 {% endblock %} {% block form_elements %}
 
 <div class="input-group mb-3">{{ form.date }}</div>
 <p>
-  {% for error in form.date.errors %} {{ form.date.label}}: {{ error }} {%
-  endfor %}
+  {% for error in form.date.errors %} {{ form.date.label}}: {{ error }} {% endfor %}
 </p>
 
 <div class="input-group mb-3">

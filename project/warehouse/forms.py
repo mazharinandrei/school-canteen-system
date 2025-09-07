@@ -58,45 +58,6 @@ class AcceptanceForm(forms.ModelForm):
         return instance
 
 
-class WriteOffForm(forms.ModelForm):
-    class Meta:
-        model = WriteOff
-        fields = ('warehouse', 'product', 'volume', 'cause', 'note')  # TODO: Хочу select2 в форме
-        labels = {
-            'warehouse': "Списать со склада",
-            'product': 'Продукт',
-            'volume': 'Количество',
-            'cause': 'Причина',
-            'note': 'Примечание',
-        }
-        widgets = {
-            'note': Textarea(attrs={'placeholder': 'Примечание', 'class': "form-control"}),
-            'volume': forms.NumberInput(attrs={'step': '1', 'placeholder': 'Количество', 'class': 'form-control'}),
-        }
-
-    def clean(self):
-        cd = self.cleaned_data
-        write_off_from_warehouse(product=cd.get('product'), volume=cd.get('volume'), warehouse=cd.get('warehouse'), cause=cd.get('cause'), note=cd.get('note'))
-        return cd
-
-    def save(self, commit=True):
-        instance = super(WriteOffForm, self).save(commit=False)
-        instance.datetime = localtime()
-        try:
-            availability = Availability.objects.get(product=instance.product,
-                                                    warehouse=instance.warehouse)
-
-        except Availability.DoesNotExist:
-            availability = Availability(product=instance.product,
-                                        warehouse=instance.warehouse,
-                                        volume=0)
-        availability.volume -= instance.volume
-        if commit:
-            availability.save()
-            instance.save()
-        return instance
-
-
 class NewWriteOffForm(forms.Form):
     warehouse = forms.ModelChoiceField(queryset=Warehouse.objects.all(), label="Склад", empty_label="Склад",
                                        widget=forms.Select(attrs={

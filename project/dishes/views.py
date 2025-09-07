@@ -1,106 +1,59 @@
 from django.contrib.auth.decorators import permission_required, login_required
 from django.http import FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 
-from .forms import DishForm, TechnologicalMapForm, TechnologicalMapFormSet
+from project.views import ProjectBaseCreateView, ProjectBaseDetailView, ProjectBaseListView
+
+from .forms import TechnologicalMapForm, TechnologicalMapFormSet
 
 from .models import FoodCategory, Dish, TechnologicalMap, TechnologicalMapComposition
 
 
-# Create your views here.
-@login_required
-def render_dishes(request):
-    context = {
-        "title": "Все блюда",
-        "data": {},
-    }
-    categories = FoodCategory.objects.all()
-    for category in categories:
-        context["data"][category] = Dish.objects.filter(category=category.id)
-    return render(request, 'dishes/dishes.html', context)
+"""
+LIST VIEWS
+"""
 
 
-@login_required
-@permission_required('dishes.add_dish')
-def create_dish(request):
-    if request.method == 'POST':
-        form = DishForm(request.POST)
-        if form.is_valid():
-            n = form.save()
-            return redirect(f'technological_map/{n.id}/create')
-        else:
-            context = {
-                "title": "Добавить блюдо",
-                "form": form,
-            }
-            return render(request, 'dishes/dish_form.html', context)
-    form = DishForm()
-    context = {
-        "title": "Добавить блюдо",
-        "form": form,
-    }
-    return render(request, 'dishes/dish_form.html', context)
+class FoodCategoryListView(ProjectBaseListView):
+    model = FoodCategory
+    template_name = "dishes/categories.html"
+
+class DishesByCategoryListView(ProjectBaseListView):
+    model = FoodCategory
+    template_name = "dishes/dishes.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Блюда по категориям"
+        return context
+
+class DishCreateView(ProjectBaseCreateView):
+    model = Dish
+    
+    def get_success_url(self):
+        return reverse("dishes:create_technological_map", args=[self.object.pk])
 
 
-@login_required
-def render_all_categories(request):
-    food_categories = FoodCategory.objects.all()
-    context = {
-        "title": "Все категории",
-        "food_categories": food_categories,
-    }
-    return render(request, "dishes/categories.html", context)
+class FoodCategoryDetailView(ProjectBaseDetailView):
+    model = FoodCategory
+    template_name = 'dishes/category.html'
 
 
-def render_category(request, category_id):
-    category = FoodCategory.objects.get(id=category_id)
-    dishes = Dish.objects.filter(category=category.id)
-    context = {
-        "title": f"Блюда категории \"{category.name}\"",
-        "dishes": dishes,
-    }
-    return render(request, 'dishes/category.html', context)
+class FoodCategoryCreateView(ProjectBaseCreateView):
+    model = FoodCategory
+    success_url = reverse_lazy("dishes:all_food_categories")
+
+class TechnologicalMapDetailView(ProjectBaseDetailView):
+    model = TechnologicalMap
+    template_name = 'dishes/technological_map.html'
 
 
-@login_required
-@permission_required('dishes.add_foodcategory')
-def create_category(request):
-    context = {
-        "title": "Добавить категорию",
-    }
-    return render(request, "dishes/categories.html", context)
-
-
-def render_technological_map(request, technological_map_id=False, technological_map_slug=False):
-    technological_map = None
-    tm_composition = None
-    if technological_map_id:
-        technological_map = TechnologicalMap.objects.get(id=technological_map_id)
-        tm_composition = TechnologicalMapComposition.objects.filter(technological_map=technological_map_id)
-
-    if technological_map_slug:  # TODO: добавить slug в модель
-        technological_map = TechnologicalMap.objects.get(id=1)
-        tm_composition = TechnologicalMapComposition.objects.filter(technological_map=1)
-
-    try:
-        if request.GET.get('dish'):
-            dish_id = request.GET.get('dish')
-            technological_map = Dish.objects.get(id=dish_id).get_actual_technological_map()
-            tm_composition = TechnologicalMapComposition.objects.filter(technological_map=technological_map.id)
-    except:
-        pass
-
-    context = {
-        "title": technological_map,
-        "technological_map": technological_map,
-        'tm_composition': tm_composition,
-    }
-
-    if technological_map and tm_composition:
-        return render(request, 'dishes/technological_map.html', context)
-    else:
-        return redirect(reverse_lazy('dishes:all'))
+def redirect_to_tm(request, dish_pk):
+    dish = get_object_or_404(Dish, pk=dish_pk)
+    tm = dish.get_actual_technological_map()
+    if dish_pk:
+        return reverse_lazy("dishes:technological_map_by_tm_id", args=[tm.pk])
 
 
 @permission_required('dishes.add_technologicalmap')

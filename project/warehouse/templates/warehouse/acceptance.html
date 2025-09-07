@@ -1,37 +1,37 @@
-{% extends 'layout.html' %}
-{% block title %} {{ title }} {% endblock %}
-{% block navigation %}{% endblock %}
-
-{% block buttons %}
-<a href="{% url 'warehouse:create_acceptance' %}" class="btn btn-primary">Принять на склад</a>
-<a href="{% url 'export:acceptance' %}" class="btn btn-outline-secondary">Экспорт</a>
-{% endblock %}
-{% block content%}
+{% extends 'layout.html' %} {% block title %} {{ title }} {% endblock %}
+<!---->
+{% block navigation %}{% endblock %} {% block buttons %}
+<a href="{% url 'warehouse:create_acceptance' %}" class="btn btn-primary"
+  >Принять на склад</a
+>
+<a href="{% url 'export:acceptance' %}" class="btn btn-outline-secondary"
+  >Экспорт</a
+>
+{% endblock %} {% block content%}
 <table class="table table-striped">
-    <tr>
-        <th>Дата</th>
-        <th>Договор</th>
-        <th>Склад</th>
-        <th>Сырьё</th>
-        <th>Количество, кг</th>
-        <th>Ответственный</th>
-        <th>Примечание</th>
-    </tr>
-    {% for acceptance in acceptances%}
-    <tr>
-        <td>{{ acceptance.datetime|date:"d.m.y H:i" }}</td>
-        <td>{{ acceptance.contract }} </td>
-        <td>{{ acceptance.warehouse }}</td>
-        <td>{{ acceptance.product }}</td>
-        <td>{{ acceptance.volume }}</td>
-        <td>{{ acceptance.staff.surname_and_initials }}</td>
-        {% if acceptance.note %}
-            <td>{{ acceptance.note }}</td>
-        {% else %}
-            <td>—</td>
-        {% endif %}
-
-    </tr>
-    {% endfor %}
+  <tr>
+    <th>Дата</th>
+    <th>Договор</th>
+    <th>Склад</th>
+    <th>Сырьё</th>
+    <th>Количество, кг</th>
+    <th>Ответственный</th>
+    <th>Примечание</th>
+  </tr>
+  {% for acceptance in object_list %}
+  <tr>
+    <td>{{ acceptance.datetime|date:"d.m.y H:i" }}</td>
+    <td>{{ acceptance.contract }}</td>
+    <td>{{ acceptance.warehouse }}</td>
+    <td>{{ acceptance.product }}</td>
+    <td>{{ acceptance.volume }}</td>
+    <td>{{ acceptance.staff.surname_and_initials }}</td>
+    {% if acceptance.note %}
+    <td>{{ acceptance.note }}</td>
+    {% else %}
+    <td>—</td>
+    {% endif %}
+  </tr>
+  {% endfor %}
 </table>
 {% endblock %}

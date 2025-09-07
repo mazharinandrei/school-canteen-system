@@ -1,27 +1,31 @@
 import os
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import ExpressionWrapper, F
-from django.forms import FloatField
 from django.http import Http404, FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
 
-from .forms import ContractForm, CounterpartyForm, ContractFormSet, ContractFileUploadForm
-from .models import Contract, Counterparty, ContractComposition
+from project.views import ProjectBaseCreateView, ProjectBaseDetailView, ProjectBaseListView
+
+from .forms import ContractForm, ContractFormSet, ContractFileUploadForm
+from .models import Contract, Counterparty
 from staff.models import get_staff_by_user
 
 
+
 # Create your views here.
+"""
+LIST VIEWS
+"""
+class CounterpartyListView(ProjectBaseListView):
+    model = Counterparty
+    permission_required = "contracts.view_сounterparty"
 
-@login_required
-def render_all_contracts(request):
-    contracts = Contract.objects.all().order_by('-date')
-    context = {
-        "title": "Все договоры",
-        "contracts": contracts,
 
-    }
-    return render(request, "contracts/all_contracts.html", context)
+class ContractListView(ProjectBaseListView):
+    model = Contract
+    permission_required = "contracts.view_contract"
+    template_name = "contracts/all_contracts.html"
 
 
 @login_required
@@ -75,7 +79,7 @@ def create_contract(request):
     return render(request, "contracts/create_contract.html", context)
 
 
-def render_contract(request, contract_id):
+def render_contract(request, contract_id): #TODO: to CBV
     contract = Contract.objects.get(id=contract_id)
 
     if request.method == 'POST' and not contract.file:
@@ -94,31 +98,9 @@ def render_contract(request, contract_id):
     return render(request, "contracts/contract.html", context)
 
 
-@login_required
-def render_counterparties(request):
-    counterparties = Counterparty.objects.all()
-    context = {
-        "title": "Все контрагенты",
-        "counterparties": counterparties,
-    }
-    return render(request, "contracts/all_counterparties.html", context)
-
-
-@login_required
-def create_counterparty(request):
-    form = CounterpartyForm()
-
-    if request.method == 'POST':
-        form = CounterpartyForm(request.POST)
-        if form.is_valid():
-            n = form.save()
-            return redirect("/contracts/all_counterparties/")
-    else:
-        context = {
-            "title": "Добавить контрагента",
-            "form": form,
-        }
-        return render(request, "contracts/create_counterparty.html", context)
+class CounterpartyCreateView(ProjectBaseCreateView):
+    model = Counterparty
+    success_url = reverse_lazy("contracts:all_counterparties")
 
 
 @login_required
@@ -126,16 +108,9 @@ def add_product_to_contract(request):
     return render(request, 'contracts/partials/add_product_to_contract_form.html',
                   {'formset': ContractFormSet()})
 
-def render_counterparty(request, counterparty_id):
-    counterparty = Counterparty.objects.get(id=counterparty_id)
-    contracts = Contract.objects.filter(counterparty=counterparty).order_by('-date')
-    context = {
-        "title": counterparty,
-        "counterparty": counterparty,
-        "contracts": contracts,
-
-    }
-    return render(request, "contracts/counterparty.html", context)
+class CounterpartyDetailView(ProjectBaseDetailView): # TODO: ordering -date
+    model = Counterparty
+    template_name = "contracts/counterparty.html"
 
 
 def download_contract_file(request, pk):
