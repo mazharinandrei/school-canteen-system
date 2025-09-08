@@ -12,23 +12,14 @@ class ContractForm(forms.ModelForm):
         fields = ['date', "counterparty", 'note']
         widgets = {
             'date': DateInput(attrs={
-                'label': 'Дата договора',
                 'type': 'date',
-                'class': 'form-control'
             }),
             'counterparty': forms.Select(attrs={
                 'class': 'form-select'
             }),
-            'note': forms.Textarea(attrs={
-                'class': 'form-control',
-                'placeholder': 'Примечание'
+            'note': forms.TextInput(attrs={
+                'placeholder': '...'
             }),
-
-        }
-        labels = {
-            'date': 'Дата договора',
-            'counterparty': "Контрагент",
-            'note': 'Примечание',
         }
 
 
@@ -36,24 +27,16 @@ class ContractCompositionForm(forms.ModelForm):
     class Meta:
         model = ContractComposition
         fields = ('product', 'total_volume', 'cost')
-        labels = {
-            'product': 'Продукт',
-            'total_volume': 'Объём, кг',
-            'cost': "Полная цена",
-        }
         widgets = {
-            'product': forms.Select(attrs={
-                'class': 'form-select',
-            }),
-            'total_volume': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Объём, кг'
+            
+            'product': forms.Select(
+                attrs={'class': 'form-select',}),
 
-            }),
-            'cost': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Полная цена'
-            }),
+            "total_volume": forms.NumberInput(
+                attrs={"placeholder": "Количество по договору, кг"}),
+            
+            "cost": forms.NumberInput(
+                attrs={"placeholder": "Полная стоимость"})
         }
 
 
