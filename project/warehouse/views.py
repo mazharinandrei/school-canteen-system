@@ -39,12 +39,10 @@ class WarehouseListView(ProjectBaseListView):
 
 class AcceptanceListView(WarehouseListView):
     model = Acceptance
-    ordering = ['-datetime'] # TODO: пока так, но потом нужно сделать универсальным
     template_name = "warehouse/acceptance.html"
 
 class WriteOffListView(WarehouseListView):
     model = WriteOff
-    ordering = ['-datetime'] # TODO: пока так, но потом нужно сделать универсальным
     template_name = "warehouse/write_off.html"
 
 class AvailabilityListView(WarehouseListView):
@@ -54,7 +52,6 @@ class AvailabilityListView(WarehouseListView):
 
 class ProductTransferListView(ProjectBaseListView):
     model = ProductTransfer
-    ordering = '-datetime' # TODO: пока так, но потом нужно сделать универсальным
     template_name = "warehouse/transfers.html"
 
 

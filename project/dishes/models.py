@@ -113,6 +113,7 @@ class TechnologicalMap(models.Model):
         return f"ТТК {self.dish} от {self.date}"
 
     class Meta:
+        ordering = ["-date"]
         verbose_name = 'Технологическая карта'
         verbose_name_plural = 'Технологические карты'
 

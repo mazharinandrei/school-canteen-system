@@ -39,6 +39,7 @@ class Acceptance(models.Model):  # Приём на склад
         return f"Приём на склад {self.warehouse}: {self.product}, {self.volume}"
 
     class Meta:
+        ordering = ["-datetime"]
         verbose_name = 'Приём на склад'
         verbose_name_plural = 'Приёмы на склады'
 
@@ -69,6 +70,7 @@ class WriteOff(models.Model):  # Списание со склада
         return f"Списание co склада {self.warehouse}: {self.product}, {self.volume}"
 
     class Meta:
+        ordering = ["-datetime"]
         verbose_name = 'Списание co склада'
         verbose_name_plural = 'Списания co складов'
 
@@ -129,6 +131,7 @@ class FactAvailability(models.Model):  # Фактическое наличие �
         return f"Фактическое наличие на складе {self.warehouse}: {self.product}, {self.volume} {self.datetime}"
 
     class Meta:
+        ordering = ["-datetime"]
         verbose_name = 'Фактическое наличие на складе'
         verbose_name_plural = 'Фактическое наличие на складе'
 

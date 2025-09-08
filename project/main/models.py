@@ -177,6 +177,7 @@ class MenuRequirement(models.Model):
         return reverse("main:menu", args=[self.date])
 
     class Meta:
+        ordering = ["-date"]
         verbose_name = 'Меню-требование'
         verbose_name_plural = 'Меню-требования'
         unique_together = ('date', 'student_feeding_category')
@@ -218,6 +219,7 @@ class NutrientNormative(models.Model):
         return f"Норматив питания для категории {self.student_feeding_category}"
 
     class Meta:
+        ordering = ["-created_at"]
         verbose_name = 'Норматив нутриентов'
         verbose_name_plural = 'Нормативы нутриентов'
 
@@ -266,5 +268,6 @@ class ApplicationForStudentMeals(models.Model):
             return True
 
     class Meta:
+        ordering = ["-date"]
         verbose_name = 'Заявка на питание'
         verbose_name_plural = 'Заявки на питание'
