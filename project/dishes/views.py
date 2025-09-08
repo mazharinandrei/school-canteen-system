@@ -57,8 +57,8 @@ def redirect_to_tm(request, dish_pk):
 
 
 @permission_required('dishes.add_technologicalmap')
-def create_technological_map(request, dish_id):
-    dish = get_object_or_404(Dish, pk=dish_id)
+def create_technological_map(request, dish_pk):
+    dish = get_object_or_404(Dish, pk=dish_pk)
     if request.method == 'POST':
 
         form = TechnologicalMapForm(request.POST)
