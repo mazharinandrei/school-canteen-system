@@ -108,7 +108,7 @@ def add_product_to_contract(request):
     return render(request, 'contracts/partials/add_product_to_contract_form.html',
                   {'formset': ContractFormSet()})
 
-class CounterpartyDetailView(ProjectBaseDetailView): # TODO: ordering -date
+class CounterpartyDetailView(ProjectBaseDetailView):
     model = Counterparty
     template_name = "contracts/counterparty.html"
 

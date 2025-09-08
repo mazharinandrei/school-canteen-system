@@ -34,7 +34,6 @@ def index(request):
 class MenuRequirementListView(ProjectBaseListView):
     model = MenuRequirement
     template_name = "base_list.html"
-    ordering = ['-date'] #TODO: унифицировать
 
 
 def render_menu(request, date):
@@ -319,8 +318,6 @@ class ApplicationCreateView(ProjectBaseCreateView):
 
 class ApplicationListView(ProjectBaseListView):
     model = ApplicationForStudentMeals
-    #permission_required = "" # TODO
-    ordering = ('-date', 'grade')
     template_name = "main/list_application_for_student_meals.html" # TODO: переделать
     
     def get_context_data(self, **kwargs):

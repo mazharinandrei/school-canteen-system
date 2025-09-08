@@ -66,6 +66,7 @@ class Contract(models.Model):
         return reverse("contracts:render_contract", args=[self.pk])
 
     class Meta:
+        ordering = ["-date"]
         verbose_name = 'Договор'
         verbose_name_plural = 'Договора'
 
