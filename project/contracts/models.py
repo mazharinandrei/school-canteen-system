@@ -35,17 +35,50 @@ class Counterparty(models.Model):  # Контрагенты
 
 
 class Contract(models.Model):
-    date = models.DateField()
-    staff = models.ForeignKey(Staff, on_delete=models.PROTECT, blank=True, null=True, default=2)
-    counterparty = models.ForeignKey(Counterparty, on_delete=models.PROTECT, related_name="contracts")
-    is_actual = models.BooleanField(blank=True, null=True, default=True)
-    file = models.FileField(upload_to='contracts/contracts_files', blank=True, null=True)
+    date = models.DateField(
+        verbose_name="Дата договора"
+    )
+
+    staff = models.ForeignKey(
+        Staff, 
+        verbose_name="Ответственный сотрудник",
+        on_delete=models.PROTECT, 
+        blank=True, null=True, 
+        default=2
+    )
+
+    counterparty = models.ForeignKey(
+        Counterparty, 
+        verbose_name="Организация",
+        on_delete=models.PROTECT, 
+        related_name="contracts"
+    )
+
+    is_actual = models.BooleanField(
+        verbose_name="Актуальность",
+        blank=True, 
+        null=True, 
+        default=True
+    )
+
+    file = models.FileField(
+        verbose_name="Файл договора",
+        upload_to='contracts/contracts_files', 
+        blank=True, 
+        null=True
+    )
     products = models.ManyToManyField(
         Product,
+        verbose_name="Продукты",
         through="ContractComposition",
         through_fields=("contract", "product")
     )
-    note = models.TextField(blank=True, null=True)  # Поле для примечаний
+
+    note = models.TextField(
+        verbose_name="Примечание",
+        blank=True, 
+        null=True
+    )
 
     def __str__(self):
         return f"Договор с {self.counterparty} от {self.date}"
@@ -72,11 +105,36 @@ class Contract(models.Model):
 
 
 class ContractComposition(models.Model):
-    contract = models.ForeignKey(Contract, on_delete=models.PROTECT)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
-    total_volume = models.DecimalField(max_digits=15, decimal_places=3)
-    received_volume = models.DecimalField(max_digits=15, decimal_places=3, default=Decimal(0))
-    cost = models.DecimalField(max_digits=15, decimal_places=2)
+    contract = models.ForeignKey(
+        Contract, 
+        on_delete=models.PROTECT,
+        verbose_name="Договор",
+        related_name="composition"
+    )
+
+    product = models.ForeignKey(
+        Product, 
+        verbose_name="Продукт",
+        on_delete=models.PROTECT
+    )
+
+    total_volume = models.DecimalField(
+        verbose_name="Количество по договору, кг",
+        max_digits=15, 
+        decimal_places=3
+    )
+
+    received_volume = models.DecimalField(
+        verbose_name="Принято, кг",
+        max_digits=15, 
+        decimal_places=3, 
+        default=Decimal(0)
+    )
+    cost = models.DecimalField(
+        verbose_name="Полная стоимость",
+        max_digits=15, 
+        decimal_places=2
+    )
 
     def __str__(self):
         return f"{self.contract}: {self.product} - {self.received_volume}/{self.total_volume}"
