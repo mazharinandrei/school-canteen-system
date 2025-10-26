@@ -5,10 +5,10 @@ from django.http import Http404, FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 
-from project.views import ProjectBaseCreateView, ProjectBaseDetailView, ProjectBaseListView
+from project.views import ParentChildrenCreateView, ProjectBaseCreateView, ProjectBaseDetailView, ProjectBaseListView
 
-from .forms import ContractForm, ContractFormSet, ContractFileUploadForm
-from .models import Contract, Counterparty
+from .forms import ContractCompositionForm, ContractForm, ContractFileUploadForm
+from .models import Contract, ContractComposition, Counterparty
 from staff.models import get_staff_by_user
 
 
@@ -26,57 +26,6 @@ class ContractListView(ProjectBaseListView):
     model = Contract
     permission_required = "contracts.view_contract"
     template_name = "contracts/all_contracts.html"
-
-
-@login_required
-def create_contract(request):
-    if request.method == 'POST':
-
-        form = ContractForm(request.POST)
-
-        products = request.POST.getlist("product")
-        volumes = request.POST.getlist("total_volume")
-        costs = request.POST.getlist("cost")
-
-        staff = get_staff_by_user(request.user)
-
-        data_for_formset = {
-
-            "contractcomposition_set-TOTAL_FORMS": str(len(products)),
-            "contractcomposition_set-INITIAL_FORMS": "0",
-        }
-
-        for i in range(len(products)):
-            data_for_formset[f"contractcomposition_set-{i}-product"] = products[i]
-            data_for_formset[f"contractcomposition_set-{i}-total_volume"] = volumes[i]
-            data_for_formset[f"contractcomposition_set-{i}-cost"] = costs[i]
-        print(data_for_formset)
-        formset = ContractFormSet(data_for_formset)
-
-
-        if form.is_valid() and formset.is_valid():
-            contract = form.save(commit=False)
-            contract.staff = staff
-
-            contract.save()
-
-            formset.instance = contract
-
-            formset.save()
-            return redirect('/contracts/all_contracts')
-        else:
-            print(form.errors)
-            print(formset.errors)
-    else:
-        form = ContractForm(initial={'staff': get_staff_by_user(request.user)})
-        formset = ContractFormSet()
-    context = {
-        "title": "Добавить договор",
-        'form': form,
-        'formset': formset,
-    }
-
-    return render(request, "contracts/create_contract.html", context)
 
 
 def render_contract(request, contract_id): #TODO: to CBV
@@ -97,16 +46,35 @@ def render_contract(request, contract_id): #TODO: to CBV
     }
     return render(request, "contracts/contract.html", context)
 
+"""
+CREATE VIEW
+"""
 
 class CounterpartyCreateView(ProjectBaseCreateView):
     model = Counterparty
     success_url = reverse_lazy("contracts:all_counterparties")
 
+class ContractCreateView(ParentChildrenCreateView):
+    parent_model = Contract
+    child_model = ContractComposition
 
-@login_required
-def add_product_to_contract(request):
-    return render(request, 'contracts/partials/add_product_to_contract_form.html',
-                  {'formset': ContractFormSet()})
+    parent_form_class = ContractForm
+    child_form_class = ContractCompositionForm
+
+    formset_kwargs = {
+        "extra": 0, 
+        "min_num": 1, 
+        "validate_min": True
+    }
+
+    def get_success_url(self):
+        return reverse_lazy("contracts:render_contract", args=[self.object.pk])
+
+
+"""
+DETAIL VIEW
+"""
+
 
 class CounterpartyDetailView(ProjectBaseDetailView):
     model = Counterparty
