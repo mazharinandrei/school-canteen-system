@@ -1,0 +1,32 @@
+[project]
+name = "school-canteen-system"
+version = "0.1.0"
+description = "🍽ИС школьной столовой"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "asgiref==3.9.1",
+    "django==5.2.6",
+    "django-crispy-forms==2.4",
+    "django-mathfilters==1.0.0",
+    "django-widget-tweaks==1.5.0",
+    "dotenv==0.9.9",
+    "et-xmlfile==2.0.0",
+    "mysqlclient==2.2.7",
+    "numpy==2.3.2",
+    "openpyxl==3.1.5",
+    "pandas==2.3.2",
+    "python-dateutil==2.9.0.post0",
+    "python-dotenv==1.1.1",
+    "pytz==2025.2",
+    "six==1.17.0",
+    "sqlparse==0.5.3",
+    "tzdata==2025.2",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.9.0",
+    "mypy>=1.18.2",
+    "ruff>=0.14.2",
+]
