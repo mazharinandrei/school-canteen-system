@@ -1,0 +1,29 @@
+{% load widget_tweaks %}
+<div class="row" id="formset-container">
+  {{ formset.management_form }} 
+ 
+  {% for formset_form in formset %}
+    
+    <div class="formset-form input-group my-1">
+      {% for field in formset_form %}
+        {{field|add_class:"form-control"}}
+      {% endfor %}
+      <button class="btn btn-outline-secondary remove-form" type="button" id="button-addon2"> <span class="btn-close"></span></button>
+  </div>
+
+  {%endfor%}
+</div>
+
+<!-- Скрытый шаблон для клонирования -->
+<div id="empty-form-template" style="display: none">
+  <div class="formset-form input-group my-1">
+     {% for field in formset.empty_form %}
+      {{field|add_class:"form-control"}}
+     {% endfor %}
+     <button class="btn btn-outline-secondary remove-form" type="button" id="button-addon2"> <span class="btn-close "></span></button>
+  </div>
+</div>
+
+<div class="input-group my-3">
+  <button type="button" class="btn btn-outline-secondary w-100" id="add-form">Добавить строку</button>
+</div>

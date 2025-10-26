@@ -1,0 +1,27 @@
+{% extends 'layout.html' %} {% block content %}
+{% load widget_tweaks %}
+{% load static %}
+<form method="post">
+  {% csrf_token %} 
+  
+  {{form.errors}}
+
+  {% for field in form %}
+    <div class="input-group my-3">
+      <span class="input-group-text">{{field.label}}</span>
+      {{ field|add_class:"form-control" }}      
+    </div>
+  {% endfor %}
+
+  <h3> {{ formset_title }} </h3>
+
+  {% include "partials/children_formset.html" with formset=formset %}
+
+  <div class="input-group my-3">
+    <button type="submit" class="btn btn-primary w-100">Сохранить</button>
+  </div>
+</form>
+
+
+<script src="{% static 'main/js/childrenformset.js' %}"></script>
+{% endblock %}
