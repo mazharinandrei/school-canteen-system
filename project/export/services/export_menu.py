@@ -1,11 +1,9 @@
-import json
 import os
 from datetime import datetime
 
 from .export_to_table.work_with_tables import insert_row, with_workbook, bold_font, center_aligment
 from main.models import MenuRequirement, MenuRequirementComposition, MealType, StudentFeedingCategory
 
-from openpyxl.styles import Alignment
 
 
 def get_name_of_category(student_feeding_category):

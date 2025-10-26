@@ -1,4 +1,3 @@
-from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -10,15 +9,12 @@ from main.models import NutrientNormative, list_actual_menus_for_feeding_categor
 
 from dishes.models import Dish, get_dishes_with_no_tc
 
-from contracts.models import get_cost_of_product
 
 from dishes.services import get_dish_composition
 
 from reports.services.abc_analysis import generate_abc_analysis_table, get_products_by_categories
 
-from dishes.services import get_cost_of_dish
 
-from contracts.services.services import get_actual_contracts
 
 from contracts.services.services import get_product_cost
 

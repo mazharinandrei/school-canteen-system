@@ -6,7 +6,7 @@ from .menu_info import get_cycle_menu_day_composition
 from ..models import Holiday
 from dishes.services import get_dish_composition
 
-from warehouse.services.warehouse_transactions import is_volume_more_than_availability, get_availability_or_zero
+from warehouse.services.warehouse_transactions import get_availability_or_zero
 
 
 def is_holiday(date):

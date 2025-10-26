@@ -1,8 +1,7 @@
-import json
 import os
 
 import pandas as pd
-from main.models import StudentFeedingCategory, list_actual_menus
+from main.models import list_actual_menus
 
 from dishes.services import get_dish_composition
 
@@ -108,7 +107,7 @@ def generate_abc_analysis_table():
 
 
 def get_detailed_table():
-    file_path = os.path.join(os.getcwd(), f"export\exported_files\\abc\\abc.xlsx")
+    file_path = os.path.join(os.getcwd(), "export\exported_files\\abc\\abc.xlsx")
     if os.path.exists(file_path):
         return file_path
     else:

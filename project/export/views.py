@@ -1,13 +1,11 @@
 from django.contrib.auth.decorators import permission_required
 from django.http import FileResponse
-from django.shortcuts import render
 
 from .services.export_acceptance import generate_acceptance_file
 from .services.export_availability import generate_availability_file
 from .services.export_costs_of_dishes import generate_costs_of_dishes_file
 from .services.export_menu import generate_menu_file
 from .services.export_dishes import generate_dishes_file
-from main.services.products_calc import products_calc_by_date_interval
 
 from .services.export_menu_requirement import generate_menu_requirement_file
 from .services.export_products_calc import generate_products_calc_file

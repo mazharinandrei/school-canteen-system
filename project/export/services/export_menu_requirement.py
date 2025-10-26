@@ -3,7 +3,7 @@ import os
 from main.services.menu_info import get_menu_product_composition
 
 from ..services.export_menu import insert_menu_data, get_name_of_category, get_menu_data, get_menu
-from .export_to_table.work_with_tables import insert_row, with_workbook, bold_font, center_aligment
+from .export_to_table.work_with_tables import insert_row, with_workbook, center_aligment
 
 
 def generate_menu_requirement_file(date, student_feeding_category):

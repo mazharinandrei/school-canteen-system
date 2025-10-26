@@ -1,13 +1,12 @@
 from datetime import timedelta
 
 from django import forms
-from django.forms import Textarea, DateField, DateInput, NumberInput, inlineformset_factory, ChoiceField, Select, \
-    TextInput
+from django.forms import DateInput, NumberInput, inlineformset_factory, Select
 from django.utils.timezone import localdate
 
-from .models import CycleMenu, CycleMenuComposition, MenuRequirement, MenuRequirementComposition, MealType, \
+from .models import MenuRequirement, MenuRequirementComposition, MealType, \
     StudentFeedingCategory, ApplicationForStudentMeals
-from dishes.models import Dish, FoodCategory, Product
+from dishes.models import Dish, FoodCategory
 
 
 class OrderCalculationForm(forms.Form):

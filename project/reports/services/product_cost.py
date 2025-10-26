@@ -1,4 +1,4 @@
-from dishes.models import Dish, TechnologicalMap
+from dishes.models import Dish
 
 from main_project.contracts.models import get_cost_of_product
 
