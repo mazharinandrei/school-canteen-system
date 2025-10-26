@@ -1,9 +1,7 @@
-from typing import List, Any
 
 from ..models import MenuRequirementComposition, CycleMenu, MealType, CycleMenuComposition
 from dishes.services import get_dish_composition
 
-from contracts.models import get_cost_of_product
 
 from contracts.services.services import get_product_cost
 
@@ -30,7 +28,7 @@ def get_menu_product_composition(menu):
         try:
             cost = get_product_cost(key) / 1000 * value
 
-        except Exception as e:
+        except Exception:
             cost = None
 
         result.append({

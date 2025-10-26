@@ -1,8 +1,7 @@
 from django import forms
 from django.forms import DateInput
 
-from .models import Contract, Counterparty, ContractComposition
-from staff.models import Staff
+from .models import Contract, ContractComposition
 
 
 class ContractForm(forms.ModelForm):

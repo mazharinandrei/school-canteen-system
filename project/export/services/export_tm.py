@@ -1,10 +1,7 @@
 import os
-from datetime import datetime
 
-from main.services.products_calc import products_calc_by_date_interval
 
-from .export_to_table.work_with_tables import with_workbook, insert_row, center_aligment, bold_font
-from main.models import StudentFeedingCategory
+from .export_to_table.work_with_tables import with_workbook, insert_row, bold_font
 
 from dishes.models import TechnologicalMapComposition, TechnologicalMap
 

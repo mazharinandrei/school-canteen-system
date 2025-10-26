@@ -1,4 +1,3 @@
-import datetime
 from datetime import timedelta
 
 from django.contrib.auth.decorators import permission_required, login_required
@@ -8,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.timezone import localdate
 
-from project.views import ProjectBaseCreateView, ProjectBaseDetailView, ProjectBaseListView
+from project.views import ProjectBaseCreateView, ProjectBaseListView
 
 from .forms import (OrderCalculationForm, MenuRequirementForm, \
                     menu_requirement_composition_formset, MenuRequirementCompositionForm,
@@ -72,7 +71,7 @@ def render_menu(request, date):
     try:
         full_composition = get_menu_product_composition(menu_requirement)
 
-    except Exception as e:
+    except Exception:
         full_composition = []
 
     for el in full_composition:
@@ -291,7 +290,7 @@ def create_menu_requirement(request):
                                             })
 
     context = {
-        "title": f"Сформировать меню-требование",
+        "title": "Сформировать меню-требование",
         'form': form,
         'm': m,
         # "formset21": formset21,

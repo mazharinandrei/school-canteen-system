@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import permission_required, login_required
+from django.contrib.auth.decorators import permission_required
 from django.http import FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -7,7 +7,7 @@ from project.views import ProjectBaseCreateView, ProjectBaseDetailView, ProjectB
 
 from .forms import TechnologicalMapForm, TechnologicalMapFormSet
 
-from .models import FoodCategory, Dish, TechnologicalMap, TechnologicalMapComposition
+from .models import FoodCategory, Dish, TechnologicalMap
 
 
 """

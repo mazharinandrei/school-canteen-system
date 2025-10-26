@@ -1,8 +1,7 @@
 from django import forms
-from django.forms import Textarea, DateInput, NumberInput, TextInput, Select
-from django.views.generic import CreateView, UpdateView
+from django.forms import Textarea, DateInput, NumberInput
 
-from .models import TechnologicalMapComposition, Dish, TechnologicalMap, Product
+from .models import TechnologicalMapComposition, TechnologicalMap, Product
 
 
 class TechnologicalMapForm(forms.ModelForm):

@@ -1,8 +1,8 @@
 from collections import defaultdict
 
-from django.db.models import Avg, Q, FloatField, ExpressionWrapper, F
+from django.db.models import Avg, Q
 
-from ..models import Contract, ContractComposition
+from ..models import Contract
 from dishes.models import Product
 
 

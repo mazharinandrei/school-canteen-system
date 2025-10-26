@@ -14,7 +14,7 @@ def get_dish_composition(dish, grams=100):
     for el in tmc:
         try:
             el.cost = float(get_product_cost(el.product)) / 1000 * float(el.volume_per_portion)
-        except Exception as e:
+        except Exception:
             el.cost = 0
     return tmc
 

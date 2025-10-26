@@ -1,15 +1,13 @@
 import os
 
-from django.contrib.auth.decorators import login_required
 from django.http import Http404, FileResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 
 from project.views import ParentChildrenCreateView, ProjectBaseCreateView, ProjectBaseDetailView, ProjectBaseListView
 
 from .forms import ContractCompositionForm, ContractForm, ContractFileUploadForm
 from .models import Contract, ContractComposition, Counterparty
-from staff.models import get_staff_by_user
 
 
 

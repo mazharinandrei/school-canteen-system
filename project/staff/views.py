@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import permission_required, login_required
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.forms import AuthenticationForm
 
 from django.shortcuts import render
@@ -10,7 +10,6 @@ from .models import Staff, Positions
 from contracts.models import Contract
 
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.mixins import PermissionRequiredMixin
 # Create your views here.
 
 """
