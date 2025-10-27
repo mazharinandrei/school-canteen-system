@@ -19,26 +19,23 @@ def generate_costs_of_dishes_file():
     for dish in Dish.objects.all():
         cost = get_cost_of_dish(dish)
         if cost:
-            result.append({"dish": dish.name,
-                           "cost": str("{:.2f}".format(float(cost))).replace('.', ',')
-                           })
+            result.append(
+                {
+                    "dish": dish.name,
+                    "cost": str("{:.2f}".format(float(cost))).replace(".", ","),
+                }
+            )
 
     return create_costs_of_dishes_file(result, file_path)
 
 
 @with_workbook
 def create_costs_of_dishes_file(ws, data, file_path):
-    insert_row(ws=ws,
-               data=("Дата отчёта", localdate()),
-               widths=(50, 15))
+    insert_row(ws=ws, data=("Дата отчёта", localdate()), widths=(50, 15))
 
-    insert_row(ws=ws,
-               row_index=2,
-               data=("Наименование блюда", "Стоимость, руб"))
+    insert_row(ws=ws, row_index=2, data=("Наименование блюда", "Стоимость, руб"))
     i = 3
     for el in data:
-        insert_row(ws=ws,
-                   row_index=i,
-                   data=(el["dish"], el["cost"]))
+        insert_row(ws=ws, row_index=i, data=(el["dish"], el["cost"]))
         i += 1
     return file_path

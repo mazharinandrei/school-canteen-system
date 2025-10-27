@@ -1,7 +1,15 @@
 from django.contrib import admin
 
-from .models import (Warehouse, Acceptance, WriteOff, Availability, WriteOffCause, FactAvailability, ProductTransfer,
-                     ProductLimit)
+from .models import (
+    Warehouse,
+    Acceptance,
+    WriteOff,
+    Availability,
+    WriteOffCause,
+    FactAvailability,
+    ProductTransfer,
+    ProductLimit,
+)
 
 # Register your models here.
 admin.site.register(Warehouse)

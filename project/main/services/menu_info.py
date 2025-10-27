@@ -1,5 +1,9 @@
-
-from ..models import MenuRequirementComposition, CycleMenu, MealType, CycleMenuComposition
+from ..models import (
+    MenuRequirementComposition,
+    CycleMenu,
+    MealType,
+    CycleMenuComposition,
+)
 from dishes.services import get_dish_composition
 
 
@@ -17,10 +21,16 @@ def get_menu_product_composition(menu):
         if get_dish_composition(element.dish, element.volume_per_student):
 
             for el in get_dish_composition(element.dish, element.volume_per_student):
-                if el.product in menu_product_composition.keys():  # Если продукт уже был в другом блюде
-                    menu_product_composition[el.product] += float(el.volume_per_portion) * menu.students_number
+                if (
+                    el.product in menu_product_composition.keys()
+                ):  # Если продукт уже был в другом блюде
+                    menu_product_composition[el.product] += (
+                        float(el.volume_per_portion) * menu.students_number
+                    )
                 else:
-                    menu_product_composition[el.product] = float(el.volume_per_portion) * menu.students_number
+                    menu_product_composition[el.product] = (
+                        float(el.volume_per_portion) * menu.students_number
+                    )
         else:
             raise Exception(f"No composition {element.dish}")
 
@@ -31,16 +41,8 @@ def get_menu_product_composition(menu):
         except Exception:
             cost = None
 
-        result.append({
-            "product": key,
-            "volume": value,
-            "cost": cost
-        })
-        print({
-                "product": key,
-                "volume": value,
-                "cost": cost
-            })
+        result.append({"product": key, "volume": value, "cost": cost})
+        print({"product": key, "volume": value, "cost": cost})
     return result
 
 
@@ -48,12 +50,7 @@ def get_menu_nutrients(menu):
     """
     Получить БЖУ меню
     """
-    result = {
-        "calories": 0,
-        "proteins": 0,
-        "fats": 0,
-        "carbohydrates": 0
-    }
+    result = {"calories": 0, "proteins": 0, "fats": 0, "carbohydrates": 0}
     menu_composition = MenuRequirementComposition.objects.filter(menu_requirement=menu)
     no_tm = []
     for element in menu_composition:
@@ -75,16 +72,15 @@ def get_cycle_menu_day_composition(week_number, week_day, student_feeding_catego
     result = []
     for meal_type in MealType.objects.all():
         try:
-            cycle_menu = CycleMenu.objects.filter(week_number=week_number,
-                                                  week_day=week_day,
-                                                  student_feeding_category=student_feeding_category,
-                                                  meal_type=meal_type).latest('actual_since')
+            cycle_menu = CycleMenu.objects.filter(
+                week_number=week_number,
+                week_day=week_day,
+                student_feeding_category=student_feeding_category,
+                meal_type=meal_type,
+            ).latest("actual_since")
 
             dishes = CycleMenuComposition.objects.filter(cycle_menu_day=cycle_menu)
-            result.append({
-                "meal_type": meal_type,
-                "dishes": dishes
-            })
+            result.append({"meal_type": meal_type, "dishes": dishes})
         except Exception as e:
             print(e)
             pass

@@ -8,7 +8,14 @@ from django.shortcuts import render, redirect
 from project.views import ProjectBaseListView
 
 from .forms import AcceptanceForm, NewWriteOffForm
-from .models import Acceptance, WriteOff, Availability, Warehouse, ProductTransfer, WriteOffCause
+from .models import (
+    Acceptance,
+    WriteOff,
+    Availability,
+    Warehouse,
+    ProductTransfer,
+    WriteOffCause,
+)
 from contracts.models import Contract
 
 from main.services.menu_info import get_menu_product_composition
@@ -18,29 +25,34 @@ from staff.models import get_staff_by_user
 
 from .services.warehouse_transactions import product_transfer, write_off_from_warehouse
 
+
 class WarehouseListView(ProjectBaseListView):
     """
     Mixin-ListView для всех ListView складских перемещений
     """
+
     # TODO: общий template
     def get_queryset(self):
         queryset = super().get_queryset()
 
-        if self.request.GET.get('warehouse'):
-            queryset = queryset.filter(warehouse=self.request.GET.get('warehouse'))
-        
-        if self.request.GET.get('product'):
-            queryset = queryset.filter(warehouse=self.request.GET.get('product'))
+        if self.request.GET.get("warehouse"):
+            queryset = queryset.filter(warehouse=self.request.GET.get("warehouse"))
+
+        if self.request.GET.get("product"):
+            queryset = queryset.filter(warehouse=self.request.GET.get("product"))
 
         return queryset
+
 
 class AcceptanceListView(WarehouseListView):
     model = Acceptance
     template_name = "warehouse/acceptance.html"
 
+
 class WriteOffListView(WarehouseListView):
     model = WriteOff
     template_name = "warehouse/write_off.html"
+
 
 class AvailabilityListView(WarehouseListView):
     model = Availability
@@ -53,26 +65,28 @@ class ProductTransferListView(ProjectBaseListView):
 
 
 def load_products_for_acceptance(request):
-    contract_id = request.GET.get('contract')
+    contract_id = request.GET.get("contract")
     contract = Contract.objects.get(id=contract_id)
     return contract.products.all()
 
 
 @login_required
-@permission_required('warehouse.add_acceptance')
+@permission_required("warehouse.add_acceptance")
 def create_acceptance(request):
     if request.method == "POST":
-        products = request.POST.getlist('product')
-        volumes = request.POST.getlist('volume')
-        warehouse = request.POST['warehouse']
+        products = request.POST.getlist("product")
+        volumes = request.POST.getlist("volume")
+        warehouse = request.POST["warehouse"]
 
         for i in range(len(products)):
-            form = AcceptanceForm(data={
-                'contract': request.POST['contract'],
-                'product': products[i],
-                'volume': volumes[i],
-                'warehouse': warehouse,
-            })
+            form = AcceptanceForm(
+                data={
+                    "contract": request.POST["contract"],
+                    "product": products[i],
+                    "volume": volumes[i],
+                    "warehouse": warehouse,
+                }
+            )
             if form.is_valid():
                 form.save()  # TODO: перед проверкой проверять, хватит ли денег
             else:  # Если форма не валидная, перезагружается страница и передаётся сообщение об ошибке
@@ -81,7 +95,7 @@ def create_acceptance(request):
                     "form": form,
                 }
                 return render(request, "warehouse/create_acceptance.html", context)
-        return redirect('/warehouse/acceptance')
+        return redirect("/warehouse/acceptance")
 
     form = AcceptanceForm()
     actual_contracts = Contract.objects.filter(is_actual=True)
@@ -94,9 +108,9 @@ def create_acceptance(request):
 
 
 @login_required
-@permission_required('warehouse.add_acceptance')
+@permission_required("warehouse.add_acceptance")
 def render_acceptance_form(request):
-    contract_id = request.GET.get('contract')
+    contract_id = request.GET.get("contract")
     options = Contract.objects.get(id=contract_id).products.all()
     form = AcceptanceForm()
     context = {
@@ -109,34 +123,38 @@ def render_acceptance_form(request):
 
 @login_required
 def add_product_to_acceptance(request):
-    contract_id = request.GET.get('contract')
+    contract_id = request.GET.get("contract")
     options = Contract.objects.get(id=contract_id).products.all()
-    return render(request,
-                  'warehouse/partials/acceptance_product_form.html',
-                  {'form': AcceptanceForm(), "options": options})
+    return render(
+        request,
+        "warehouse/partials/acceptance_product_form.html",
+        {"form": AcceptanceForm(), "options": options},
+    )
 
 
 @login_required
-@permission_required('warehouse.add_writeoff')
+@permission_required("warehouse.add_writeoff")
 def create_write_off(request):
     if request.method == "POST":
         user = request.user
 
-        products = request.POST.getlist('product')
-        volumes = request.POST.getlist('volume')
+        products = request.POST.getlist("product")
+        volumes = request.POST.getlist("volume")
         print(f"volumes: {volumes}")
-        warehouse = request.POST['warehouse']
-        note = request.POST['note']
-        cause = request.POST['cause']
+        warehouse = request.POST["warehouse"]
+        note = request.POST["note"]
+        cause = request.POST["cause"]
         for i in range(len(products)):
             print(f"volume: {volumes[i]}")
-            form = NewWriteOffForm(data={
-                'product': products[i],
-                'volume': volumes[i],
-                'warehouse': warehouse,
-                'note': note,
-                'cause': cause,
-            })
+            form = NewWriteOffForm(
+                data={
+                    "product": products[i],
+                    "volume": volumes[i],
+                    "warehouse": warehouse,
+                    "note": note,
+                    "cause": cause,
+                }
+            )
 
             if form.is_valid():
                 print("form is valid")
@@ -149,7 +167,7 @@ def create_write_off(request):
                 }
                 return render(request, "warehouse/create_write_off.html", context)
 
-        return redirect('/warehouse/write_off')
+        return redirect("/warehouse/write_off")
     form = NewWriteOffForm()
     context = {
         "title": "Списать со склада",
@@ -159,13 +177,13 @@ def create_write_off(request):
 
 
 def add_product_to_write_off(request):
-    return render(request,
-                  'warehouse/partials/write_off_form.html',
-                  {'form': NewWriteOffForm()})
+    return render(
+        request, "warehouse/partials/write_off_form.html", {"form": NewWriteOffForm()}
+    )
 
 
 @transaction.atomic
-@permission_required('warehouse.add_producttransfer')
+@permission_required("warehouse.add_producttransfer")
 def issue_menu(request):
     staff = get_staff_by_user(request.user)
     errors = []
@@ -178,12 +196,14 @@ def issue_menu(request):
             menu_products = get_menu_product_composition(menu_requirement)
             for el in menu_products:
                 try:
-                    product_transfer(warehouse_from=warehouse_from,
-                                     warehouse_to=warehouse_to,
-                                     product=el["product"],
-                                     volume=Decimal(el["volume"] / 1000),
-                                     staff=staff,
-                                     note=f"Отпуск продукта по {menu_requirement}")
+                    product_transfer(
+                        warehouse_from=warehouse_from,
+                        warehouse_to=warehouse_to,
+                        product=el["product"],
+                        volume=Decimal(el["volume"] / 1000),
+                        staff=staff,
+                        note=f"Отпуск продукта по {menu_requirement}",
+                    )
                 except Exception as e:
                     return HttpResponse(e)
             menu_requirement.is_issued = True
@@ -196,7 +216,7 @@ def issue_menu(request):
 
 
 @transaction.atomic
-@permission_required('warehouse.add_writeoff')
+@permission_required("warehouse.add_writeoff")
 def cook_menu(request):
     staff = get_staff_by_user(request.user)
     errors = []
@@ -209,11 +229,13 @@ def cook_menu(request):
             menu_products = get_menu_product_composition(menu_requirement)
             for el in menu_products:
                 try:
-                    write_off_from_warehouse(product=el["product"],
-                                             volume=Decimal(el["volume"] / 1000),
-                                             warehouse=warehouse,
-                                             cause=cause,
-                                             note=f"Списание продукта по {menu_requirement}")
+                    write_off_from_warehouse(
+                        product=el["product"],
+                        volume=Decimal(el["volume"] / 1000),
+                        warehouse=warehouse,
+                        cause=cause,
+                        note=f"Списание продукта по {menu_requirement}",
+                    )
                 except Exception as e:
                     return HttpResponse(e)
             menu_requirement.is_cooked = True

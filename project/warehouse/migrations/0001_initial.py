@@ -10,117 +10,361 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('contracts', '0001_initial'),
-        ('dishes', '0001_initial'),
-        ('staff', '0001_initial'),
+        ("contracts", "0001_initial"),
+        ("dishes", "0001_initial"),
+        ("staff", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Warehouse',
+            name="Warehouse",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='Наименование склада')),
-                ('address', models.CharField(max_length=100, verbose_name='Адрес склада')),
-                ('note', models.TextField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=100, verbose_name="Наименование склада"
+                    ),
+                ),
+                (
+                    "address",
+                    models.CharField(max_length=100, verbose_name="Адрес склада"),
+                ),
+                ("note", models.TextField(blank=True, null=True)),
             ],
             options={
-                'verbose_name': 'Склад',
-                'verbose_name_plural': 'Склады',
+                "verbose_name": "Склад",
+                "verbose_name_plural": "Склады",
             },
         ),
         migrations.CreateModel(
-            name='WriteOffCause',
+            name="WriteOffCause",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='Наименование причины списания')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=100, verbose_name="Наименование причины списания"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='ProductTransfer',
+            name="ProductTransfer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('volume', models.DecimalField(decimal_places=3, max_digits=9, validators=[django.core.validators.MinValueValidator(0.1)], verbose_name='Объём')),
-                ('datetime', models.DateTimeField(auto_now_add=True)),
-                ('note', models.TextField(blank=True, null=True)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dishes.product')),
-                ('staff', models.ForeignKey(blank=True, default=2, null=True, on_delete=django.db.models.deletion.PROTECT, to='staff.staff', verbose_name='Ответственный')),
-                ('warehouse_from', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='warehouse_from', to='warehouse.warehouse', verbose_name='Со склада')),
-                ('warehouse_to', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='warehouse_to', to='warehouse.warehouse', verbose_name='На склад')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "volume",
+                    models.DecimalField(
+                        decimal_places=3,
+                        max_digits=9,
+                        validators=[django.core.validators.MinValueValidator(0.1)],
+                        verbose_name="Объём",
+                    ),
+                ),
+                ("datetime", models.DateTimeField(auto_now_add=True)),
+                ("note", models.TextField(blank=True, null=True)),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="dishes.product"
+                    ),
+                ),
+                (
+                    "staff",
+                    models.ForeignKey(
+                        blank=True,
+                        default=2,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="staff.staff",
+                        verbose_name="Ответственный",
+                    ),
+                ),
+                (
+                    "warehouse_from",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="warehouse_from",
+                        to="warehouse.warehouse",
+                        verbose_name="Со склада",
+                    ),
+                ),
+                (
+                    "warehouse_to",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="warehouse_to",
+                        to="warehouse.warehouse",
+                        verbose_name="На склад",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='ProductLimit',
+            name="ProductLimit",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('min_volume', models.IntegerField(verbose_name='Объём минимального запаса')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dishes.product', verbose_name='Продукт')),
-                ('warehouse', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='warehouse.warehouse', verbose_name='Склад')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "min_volume",
+                    models.IntegerField(verbose_name="Объём минимального запаса"),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="dishes.product",
+                        verbose_name="Продукт",
+                    ),
+                ),
+                (
+                    "warehouse",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="warehouse.warehouse",
+                        verbose_name="Склад",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Лимит продукта на складе',
-                'verbose_name_plural': 'Лимиты продуктов на складе',
+                "verbose_name": "Лимит продукта на складе",
+                "verbose_name_plural": "Лимиты продуктов на складе",
             },
         ),
         migrations.CreateModel(
-            name='FactAvailability',
+            name="FactAvailability",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('datetime', models.DateTimeField(auto_now_add=True)),
-                ('volume', models.DecimalField(decimal_places=3, default=0, max_digits=9, validators=[django.core.validators.MinValueValidator(0.1)], verbose_name='Объём')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dishes.product')),
-                ('warehouse', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='warehouse.warehouse')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("datetime", models.DateTimeField(auto_now_add=True)),
+                (
+                    "volume",
+                    models.DecimalField(
+                        decimal_places=3,
+                        default=0,
+                        max_digits=9,
+                        validators=[django.core.validators.MinValueValidator(0.1)],
+                        verbose_name="Объём",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="dishes.product"
+                    ),
+                ),
+                (
+                    "warehouse",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="warehouse.warehouse",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Фактическое наличие на складе',
-                'verbose_name_plural': 'Фактическое наличие на складе',
+                "verbose_name": "Фактическое наличие на складе",
+                "verbose_name_plural": "Фактическое наличие на складе",
             },
         ),
         migrations.CreateModel(
-            name='Availability',
+            name="Availability",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('volume', models.DecimalField(decimal_places=3, default=0, max_digits=9, validators=[django.core.validators.MinValueValidator(0.1)], verbose_name='Объём')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dishes.product')),
-                ('warehouse', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='warehouse.warehouse')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "volume",
+                    models.DecimalField(
+                        decimal_places=3,
+                        default=0,
+                        max_digits=9,
+                        validators=[django.core.validators.MinValueValidator(0.1)],
+                        verbose_name="Объём",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="dishes.product"
+                    ),
+                ),
+                (
+                    "warehouse",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="warehouse.warehouse",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Наличие на складе',
-                'verbose_name_plural': 'Наличие на складе',
+                "verbose_name": "Наличие на складе",
+                "verbose_name_plural": "Наличие на складе",
             },
         ),
         migrations.CreateModel(
-            name='Acceptance',
+            name="Acceptance",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('volume', models.DecimalField(decimal_places=3, max_digits=9, validators=[django.core.validators.MinValueValidator(0.1)], verbose_name='Объём')),
-                ('datetime', models.DateTimeField(auto_now_add=True)),
-                ('note', models.TextField(blank=True, null=True)),
-                ('contract', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='contracts.contract', verbose_name='На основании договора')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dishes.product')),
-                ('staff', models.ForeignKey(blank=True, default=2, null=True, on_delete=django.db.models.deletion.PROTECT, to='staff.staff', verbose_name='Ответственный')),
-                ('warehouse', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='warehouse.warehouse')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "volume",
+                    models.DecimalField(
+                        decimal_places=3,
+                        max_digits=9,
+                        validators=[django.core.validators.MinValueValidator(0.1)],
+                        verbose_name="Объём",
+                    ),
+                ),
+                ("datetime", models.DateTimeField(auto_now_add=True)),
+                ("note", models.TextField(blank=True, null=True)),
+                (
+                    "contract",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="contracts.contract",
+                        verbose_name="На основании договора",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="dishes.product"
+                    ),
+                ),
+                (
+                    "staff",
+                    models.ForeignKey(
+                        blank=True,
+                        default=2,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="staff.staff",
+                        verbose_name="Ответственный",
+                    ),
+                ),
+                (
+                    "warehouse",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="warehouse.warehouse",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Приём на склад',
-                'verbose_name_plural': 'Приёмы на склады',
+                "verbose_name": "Приём на склад",
+                "verbose_name_plural": "Приёмы на склады",
             },
         ),
         migrations.CreateModel(
-            name='WriteOff',
+            name="WriteOff",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('volume', models.DecimalField(decimal_places=3, max_digits=9, validators=[django.core.validators.MinValueValidator(0.1)], verbose_name='Объём')),
-                ('datetime', models.DateTimeField(auto_now_add=True)),
-                ('note', models.TextField(blank=True, null=True)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dishes.product')),
-                ('staff', models.ForeignKey(blank=True, default=2, null=True, on_delete=django.db.models.deletion.PROTECT, to='staff.staff', verbose_name='Ответственный')),
-                ('warehouse', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='warehouse.warehouse')),
-                ('cause', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='warehouse.writeoffcause')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "volume",
+                    models.DecimalField(
+                        decimal_places=3,
+                        max_digits=9,
+                        validators=[django.core.validators.MinValueValidator(0.1)],
+                        verbose_name="Объём",
+                    ),
+                ),
+                ("datetime", models.DateTimeField(auto_now_add=True)),
+                ("note", models.TextField(blank=True, null=True)),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="dishes.product"
+                    ),
+                ),
+                (
+                    "staff",
+                    models.ForeignKey(
+                        blank=True,
+                        default=2,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="staff.staff",
+                        verbose_name="Ответственный",
+                    ),
+                ),
+                (
+                    "warehouse",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="warehouse.warehouse",
+                    ),
+                ),
+                (
+                    "cause",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="warehouse.writeoffcause",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Списание co склада',
-                'verbose_name_plural': 'Списания co складов',
+                "verbose_name": "Списание co склада",
+                "verbose_name_plural": "Списания co складов",
             },
         ),
     ]

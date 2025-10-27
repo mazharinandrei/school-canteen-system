@@ -6,32 +6,33 @@ from django.urls import reverse
 
 
 class Positions(models.Model):
-    name = models.CharField('Должность',
-                            max_length=100)
+    name = models.CharField("Должность", max_length=100)
+
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name = 'Должность'
-        verbose_name_plural = 'Должности'
-    
+        verbose_name = "Должность"
+        verbose_name_plural = "Должности"
+
     def get_absolute_url(self):
         return reverse("staff:render_position", args=[self.pk])
 
 
 class Staff(models.Model):
-    surname = models.CharField('Фамилия',
-                               max_length=100)
+    surname = models.CharField("Фамилия", max_length=100)
 
-    name = models.CharField('Имя',
-                            max_length=100)
+    name = models.CharField("Имя", max_length=100)
 
-    second_name = models.CharField('Отчество',
-                                   max_length=100, blank=True, null=True)
+    second_name = models.CharField("Отчество", max_length=100, blank=True, null=True)
 
-    username = models.OneToOneField('auth.User', on_delete=models.PROTECT, blank=True, null=True)
+    username = models.OneToOneField(
+        "auth.User", on_delete=models.PROTECT, blank=True, null=True
+    )
 
-    position = models.ForeignKey(Positions, on_delete=models.PROTECT, verbose_name='Должность')
+    position = models.ForeignKey(
+        Positions, on_delete=models.PROTECT, verbose_name="Должность"
+    )
 
     note = models.TextField(blank=True, null=True)  # Поле для примечаний
 
@@ -51,8 +52,8 @@ class Staff(models.Model):
         return reverse("staff:render_staff", args=[self.pk])
 
     class Meta:
-        verbose_name = 'Сотрудник'
-        verbose_name_plural = 'Сотрудники'
+        verbose_name = "Сотрудник"
+        verbose_name_plural = "Сотрудники"
 
 
 def get_staff_by_user(user):

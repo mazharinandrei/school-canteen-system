@@ -10,64 +10,129 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('dishes', '0001_initial'),
-        ('staff', '0001_initial'),
+        ("dishes", "0001_initial"),
+        ("staff", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Counterparty',
+            name="Counterparty",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=300, verbose_name='Наименование организации')),
-                ('address', models.CharField(max_length=300, verbose_name='Адрес')),
-                ('INN', models.CharField(max_length=12, verbose_name='ИНН')),
-                ('KPP', models.CharField(max_length=9, verbose_name='КПП')),
-                ('note', models.TextField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=300, verbose_name="Наименование организации"
+                    ),
+                ),
+                ("address", models.CharField(max_length=300, verbose_name="Адрес")),
+                ("INN", models.CharField(max_length=12, verbose_name="ИНН")),
+                ("KPP", models.CharField(max_length=9, verbose_name="КПП")),
+                ("note", models.TextField(blank=True, null=True)),
             ],
             options={
-                'verbose_name': 'Контрагент',
-                'verbose_name_plural': 'Контрагенты',
+                "verbose_name": "Контрагент",
+                "verbose_name_plural": "Контрагенты",
             },
         ),
         migrations.CreateModel(
-            name='Contract',
+            name="Contract",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('is_actual', models.BooleanField(blank=True, default=True, null=True)),
-                ('file', models.FileField(blank=True, null=True, upload_to='contracts/contracts_files')),
-                ('note', models.TextField(blank=True, null=True)),
-                ('staff', models.ForeignKey(blank=True, default=2, null=True, on_delete=django.db.models.deletion.PROTECT, to='staff.staff')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                ("is_actual", models.BooleanField(blank=True, default=True, null=True)),
+                (
+                    "file",
+                    models.FileField(
+                        blank=True, null=True, upload_to="contracts/contracts_files"
+                    ),
+                ),
+                ("note", models.TextField(blank=True, null=True)),
+                (
+                    "staff",
+                    models.ForeignKey(
+                        blank=True,
+                        default=2,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="staff.staff",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Договор',
-                'verbose_name_plural': 'Договора',
+                "verbose_name": "Договор",
+                "verbose_name_plural": "Договора",
             },
         ),
         migrations.CreateModel(
-            name='ContractComposition',
+            name="ContractComposition",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('total_volume', models.DecimalField(decimal_places=3, max_digits=15)),
-                ('received_volume', models.DecimalField(decimal_places=3, default=Decimal('0'), max_digits=15)),
-                ('cost', models.DecimalField(decimal_places=2, max_digits=15)),
-                ('contract', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='contracts.contract')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dishes.product')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("total_volume", models.DecimalField(decimal_places=3, max_digits=15)),
+                (
+                    "received_volume",
+                    models.DecimalField(
+                        decimal_places=3, default=Decimal("0"), max_digits=15
+                    ),
+                ),
+                ("cost", models.DecimalField(decimal_places=2, max_digits=15)),
+                (
+                    "contract",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="contracts.contract",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="dishes.product"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Состав договора',
-                'verbose_name_plural': 'Составы договоров',
+                "verbose_name": "Состав договора",
+                "verbose_name_plural": "Составы договоров",
             },
         ),
         migrations.AddField(
-            model_name='contract',
-            name='products',
-            field=models.ManyToManyField(through='contracts.ContractComposition', through_fields=('contract', 'product'), to='dishes.product'),
+            model_name="contract",
+            name="products",
+            field=models.ManyToManyField(
+                through="contracts.ContractComposition",
+                through_fields=("contract", "product"),
+                to="dishes.product",
+            ),
         ),
         migrations.AddField(
-            model_name='contract',
-            name='counterparty',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='contracts.counterparty'),
+            model_name="contract",
+            name="counterparty",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, to="contracts.counterparty"
+            ),
         ),
     ]

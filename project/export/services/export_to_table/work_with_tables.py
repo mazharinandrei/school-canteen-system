@@ -17,10 +17,12 @@ def regular_font():
 
 
 def thin_border():
-    return Border(left=Side(style='thin'),
-                  right=Side(style='thin'),
-                  top=Side(style='thin'),
-                  bottom=Side(style='thin'))
+    return Border(
+        left=Side(style="thin"),
+        right=Side(style="thin"),
+        top=Side(style="thin"),
+        bottom=Side(style="thin"),
+    )
 
 
 def with_workbook(func):
@@ -36,7 +38,9 @@ def with_workbook(func):
         try:
             filepath = func(ws, *args, **kwargs)
             if not isinstance(filepath, str):
-                raise ValueError("Функция должна вернуть строку — путь для сохранения файла.")
+                raise ValueError(
+                    "Функция должна вернуть строку — путь для сохранения файла."
+                )
             wb.save(filepath)
             return filepath
         finally:
@@ -47,12 +51,14 @@ def with_workbook(func):
 
 def get_columns(first_column_index=0, count=26):
     if count <= 26:
-        return list(ascii_uppercase[first_column_index:count + first_column_index])
+        return list(ascii_uppercase[first_column_index : count + first_column_index])
 
     # TODO: добавить поддержку большего количества стобцов (AA, AB, AC и тд)
 
 
-def insert_row(ws, data, row_index=1, widths=None, alignment=None, fonts=None, border=None):
+def insert_row(
+    ws, data, row_index=1, widths=None, alignment=None, fonts=None, border=None
+):
     columns = get_columns(count=len(data))
     for i in range(len(data)):
         cell = f"{columns[i]}{row_index}"
@@ -68,5 +74,3 @@ def insert_row(ws, data, row_index=1, widths=None, alignment=None, fonts=None, b
 
         if border:
             ws[f"{columns[i]}{row_index}"].border = border
-
-

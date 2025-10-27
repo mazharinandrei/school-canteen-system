@@ -2,10 +2,10 @@ from django.urls import path
 from . import views
 
 
-app_name = 'export'
+app_name = "export"
 
 urlpatterns = [
-    path('dishes', views.export_dishes, name='dishes'),
+    path("dishes", views.export_dishes, name="dishes"),
     path("menu", views.export_menu, name="menu"),
     path("menu-requirement", views.export_menu_requirement, name="menu_requirement"),
     path("products-calc", views.export_products_calc, name="products_calc"),
