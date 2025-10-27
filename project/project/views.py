@@ -25,7 +25,6 @@ class ProjectBaseListView(PermissionRequiredMixin, ListView):
         return f"{app}.view_{model.lower()}"
 
     def get_permission_required(self):
-        print([self.get_permission_name_for_model()])
         return [self.get_permission_name_for_model()]
 
 
@@ -48,7 +47,6 @@ class ProjectBaseCreateView(PermissionRequiredMixin, CreateView):
         return f"{app}.add_{model.lower()}"
 
     def get_permission_required(self):
-        print([self.get_permission_name_for_model()])
         return [self.get_permission_name_for_model()]
 
 
@@ -71,7 +69,6 @@ class ProjectBaseDetailView(PermissionRequiredMixin, DetailView):
         return f"{app}.view_{model.lower()}"
 
     def get_permission_required(self):
-        print([self.get_permission_name_for_model()])
         return [self.get_permission_name_for_model()]
 
 
@@ -91,12 +88,9 @@ class ParentChildrenCreateView(
         не знаю, где этому лучше быть. в классе createview или mixin
         """
         context = super().get_context_data(**kwargs)
-        context["title"] = (
-            f"Добавить {self.parent_model._meta.verbose_name.capitalize()}"
-        )
-        context["formset_title"] = (
-            f"{self.child_model._meta.verbose_name.capitalize()}:"
-        )
+
+        context["title"] = f"Добавить {self.parent_model._meta.verbose_name}"
+        context["formset_title"] = f"{self.child_model._meta.verbose_name}:"
         return context
 
     def get_permission_name_for_model(self):
@@ -104,5 +98,4 @@ class ParentChildrenCreateView(
         return f"{app}.add_{parent_model_meta_name.lower()}"
 
     def get_permission_required(self):
-        print([self.get_permission_name_for_model()])
         return [self.get_permission_name_for_model()]
