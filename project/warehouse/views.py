@@ -48,20 +48,55 @@ class AcceptanceListView(WarehouseListView):
     model = Acceptance
     template_name = "warehouse/acceptance.html"
 
+    def get_queryset(self):
+        return (
+            self.model.objects.all()
+            .select_related("warehouse")
+            .select_related("contract")
+            .select_related("product")
+            .prefetch_related("staff")
+            .prefetch_related("contract__counterparty")
+        )
+
 
 class WriteOffListView(WarehouseListView):
     model = WriteOff
     template_name = "warehouse/write_off.html"
+
+    def get_queryset(self):
+        return (
+            self.model.objects.all()
+            .select_related("warehouse")
+            .select_related("product")
+            .select_related("cause")
+            .prefetch_related("staff")
+        )
 
 
 class AvailabilityListView(WarehouseListView):
     model = Availability
     template_name = "warehouse/availability.html"
 
+    def get_queryset(self):
+        return (
+            self.model.objects.all()
+            .select_related("warehouse")
+            .select_related("product")
+        )
+
 
 class ProductTransferListView(ProjectBaseListView):
     model = ProductTransfer
     template_name = "warehouse/transfers.html"
+
+    def get_queryset(self):
+        return (
+            self.model.objects.all()
+            .select_related("warehouse_from")
+            .select_related("warehouse_to")
+            .select_related("product")
+            .prefetch_related("staff")
+        )
 
 
 def load_products_for_acceptance(request):
