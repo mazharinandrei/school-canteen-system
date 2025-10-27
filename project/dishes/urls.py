@@ -21,7 +21,7 @@ urlpatterns = [
     ),
     path(
         "technological_map/<int:dish_pk>/create",
-        views.create_technological_map,
+        views.TechnologicalMapCreateView.as_view(),
         name="create_technological_map",
     ),
     path(
@@ -34,5 +34,4 @@ urlpatterns = [
         views.TechnologicalMapDetailView.as_view(),
         name="technological_map_by_tm_id",
     ),
-    path("add-product-to-tm/", views.add_product_to_tm, name="add-product-to-tm"),
 ]
