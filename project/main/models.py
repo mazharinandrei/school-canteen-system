@@ -218,7 +218,9 @@ class MenuRequirement(models.Model):
 
 
 class MenuRequirementComposition(models.Model):
-    menu_requirement = models.ForeignKey(MenuRequirement, on_delete=models.PROTECT)
+    menu_requirement = models.ForeignKey(
+        MenuRequirement, on_delete=models.PROTECT, related_name="composition"
+    )
 
     meal_type = models.ForeignKey(
         MealType, on_delete=models.PROTECT
