@@ -103,6 +103,9 @@ class TechnologicalMap(models.Model):
         through_fields=("technological_map", "product"),
     )
 
+    def get_absolute_url(self):
+        return reverse_lazy("dishes:technological_map_by_tm_id", args=[self.pk])
+
     def get_composition(self):
         try:
             tmc = TechnologicalMapComposition.objects.filter(technological_map=self.id)

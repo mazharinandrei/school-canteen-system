@@ -32,7 +32,7 @@ urlpatterns = [
     path(
         "technological_map/<int:pk>/",
         views.TechnologicalMapDetailView.as_view(),
-        name="technological_map_by_tm_id-test",
+        name="technological_map_by_tm_id",
     ),
     path("add-product-to-tm/", views.add_product_to_tm, name="add-product-to-tm"),
 ]
