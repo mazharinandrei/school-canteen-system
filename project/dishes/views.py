@@ -1,18 +1,20 @@
-from django.contrib.auth.decorators import permission_required
 from django.http import FileResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 
 from project.views import (
     ProjectBaseCreateView,
     ProjectBaseDetailView,
     ProjectBaseListView,
+    ParentChildrenCreateView,
 )
 
-from .forms import TechnologicalMapForm, TechnologicalMapFormSet
+from .forms import (
+    TechnologicalMapForm,
+    TechnologicalMapCompositionForm,
+)
 
-from .models import FoodCategory, Dish, TechnologicalMap
-
+from .models import FoodCategory, Dish, TechnologicalMap, TechnologicalMapComposition
 
 """
 LIST VIEWS
@@ -63,53 +65,32 @@ def redirect_to_tm(request, dish_pk):
         return reverse_lazy("dishes:technological_map_by_tm_id", args=[tm.pk])
 
 
-@permission_required("dishes.add_technologicalmap")
-def create_technological_map(request, dish_pk):
-    dish = get_object_or_404(Dish, pk=dish_pk)
-    if request.method == "POST":
+class TechnologicalMapCreateView(ParentChildrenCreateView):
+    dish = None
+    object = None
+    parent_model = TechnologicalMap
+    child_model = TechnologicalMapComposition
 
-        form = TechnologicalMapForm(request.POST)
+    parent_form_class = TechnologicalMapForm
+    child_form_class = TechnologicalMapCompositionForm
+    formset_kwargs = {"extra": 0, "min_num": 1, "validate_min": True}
+    template_name = "dishes/create_technological_map.html"
 
-        products = request.POST.getlist("product")
-        volumes = request.POST.getlist("volume")
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        dish_pk = self.kwargs.get("dish_pk")
+        self.dish = get_object_or_404(Dish, pk=dish_pk)
 
-        data_for_formset = {
-            "technologicalmapcomposition_set-TOTAL_FORMS": str(len(products)),
-            "technologicalmapcomposition_set-INITIAL_FORMS": "0",
-        }
-        for i in range(len(products)):
-            data_for_formset[f"technologicalmapcomposition_set-{i}-product"] = products[
-                i
-            ]
-            data_for_formset[f"technologicalmapcomposition_set-{i}-volume"] = volumes[i]
+        context["dish_pk"] = dish_pk
+        context["title"] = f"Добавить ТТК {self.dish}"
 
-        formset = TechnologicalMapFormSet(data_for_formset)
+        return context
 
-        if form.is_valid() and formset.is_valid():
-            technological_map = form.save(commit=False)
-            technological_map.dish = dish
-            technological_map.save()
-            formset.instance = technological_map
-            formset.save()
-            return redirect("/dishes/all")
-    else:
-        form = TechnologicalMapForm()
-        formset = TechnologicalMapFormSet()
-    context = {
-        "title": f"Добавить ТТК {dish}",
-        "form": form,
-        "formset": formset,
-        "dish": dish,
-    }
-    return render(request, "dishes/create_technological_map.html", context)
-
-
-def add_product_to_tm(request):
-    return render(
-        request,
-        "dishes/partials/add_product_to_tc_form.html",
-        {"formset": TechnologicalMapFormSet()},
-    )
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.get_context_data()
+        self.object.dish = self.dish
+        return super().form_valid(form)
 
 
 def export_dishes(request):
