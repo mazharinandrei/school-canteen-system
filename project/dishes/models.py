@@ -84,7 +84,7 @@ class Product(models.Model):
 
 
 class TechnologicalMap(models.Model):
-    date = models.DateField()
+    date = models.DateField(verbose_name="ТТК актуально с даты")
     dish = models.ForeignKey(Dish, on_delete=models.PROTECT)
     calories = models.DecimalField(
         max_digits=5, decimal_places=2

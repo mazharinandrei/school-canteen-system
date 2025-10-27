@@ -11,7 +11,7 @@ class TechnologicalMapForm(forms.ModelForm):
         # TODO: сделать ограничение на длину и значения (проверить модель)
         # TODO: дату меньше сегодняшней нельзя ввести (clean_date)
         widgets = {
-            "date": DateInput(attrs={"placeholder": "Дата смены", "type": "date"}),
+            "date": DateInput(attrs={"type": "date"}),
             "calories": NumberInput(
                 attrs={
                     "class": "form-control no-border",
