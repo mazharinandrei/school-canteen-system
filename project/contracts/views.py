@@ -31,6 +31,16 @@ class ContractListView(ProjectBaseListView):
     permission_required = "contracts.view_contract"
     template_name = "contracts/all_contracts.html"
 
+    def get_queryset(self):
+        queryset = (
+            Contract.objects.all()
+            .select_related("counterparty")
+            .select_related("staff")
+            .prefetch_related("staff__position")
+            .prefetch_related("products")
+        )
+        return queryset
+
 
 def render_contract(request, contract_id):  # TODO: to CBV
     contract = Contract.objects.get(id=contract_id)
