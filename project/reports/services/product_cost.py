@@ -13,8 +13,10 @@ def is_dish_have_tm(dish):
         return True
     return False
 
+
 def get_dishes_with_tm(dish):
     pass
+
 
 def is_tm_have_cost(tm):
     for product in tm.products:
@@ -36,5 +38,3 @@ def get_dishes_with_cost():
 
 def get_dishes_without_cost():
     return Dish.objects.exclude(get_dishes_with_cost())
-
-

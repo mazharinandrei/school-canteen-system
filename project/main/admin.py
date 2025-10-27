@@ -1,6 +1,16 @@
 from django.contrib import admin
-from .models import CycleMenu, CycleMenuComposition, MenuRequirement, MenuRequirementComposition, MealType, \
-    StudentFeedingCategory, NutrientNormative, Holiday, Grade, ApplicationForStudentMeals
+from .models import (
+    CycleMenu,
+    CycleMenuComposition,
+    MenuRequirement,
+    MenuRequirementComposition,
+    MealType,
+    StudentFeedingCategory,
+    NutrientNormative,
+    Holiday,
+    Grade,
+    ApplicationForStudentMeals,
+)
 
 # Register your models here.
 

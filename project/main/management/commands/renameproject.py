@@ -7,11 +7,11 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-    help = 'Renames the Project'
+    help = "Renames the Project"
 
     def add_arguments(self, parser):
-        parser.add_argument('old', nargs='+', type=str, help="current project name")
-        parser.add_argument('new', nargs='+', type=str, help="new project name")
+        parser.add_argument("old", nargs="+", type=str, help="current project name")
+        parser.add_argument("new", nargs="+", type=str, help="new project name")
 
     def handle(self, *args, **options):
         old = options["old"][0]
@@ -24,11 +24,11 @@ class Command(BaseCommand):
         projectfiles += glob.glob(os.path.join(base, old, "*.py"))
         projectfiles += glob.glob(os.path.join(base, old, "**", "*.py"))
         for pythonfile in projectfiles:
-            with open(pythonfile, 'r') as file:
+            with open(pythonfile, "r") as file:
                 filedata = file.read()
 
             filedata = filedata.replace(old, new)
 
-            with open(pythonfile, 'w') as file:
+            with open(pythonfile, "w") as file:
                 file.write(filedata)
         os.rename(os.path.join(base, old), os.path.join(base, new))

@@ -4,17 +4,23 @@ from django.http import Http404, FileResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 
-from project.views import ParentChildrenCreateView, ProjectBaseCreateView, ProjectBaseDetailView, ProjectBaseListView
+from project.views import (
+    ParentChildrenCreateView,
+    ProjectBaseCreateView,
+    ProjectBaseDetailView,
+    ProjectBaseListView,
+)
 
 from .forms import ContractCompositionForm, ContractForm, ContractFileUploadForm
 from .models import Contract, ContractComposition, Counterparty
-
 
 
 # Create your views here.
 """
 LIST VIEWS
 """
+
+
 class CounterpartyListView(ProjectBaseListView):
     model = Counterparty
     permission_required = "contracts.view_сounterparty"
@@ -26,10 +32,10 @@ class ContractListView(ProjectBaseListView):
     template_name = "contracts/all_contracts.html"
 
 
-def render_contract(request, contract_id): #TODO: to CBV
+def render_contract(request, contract_id):  # TODO: to CBV
     contract = Contract.objects.get(id=contract_id)
 
-    if request.method == 'POST' and not contract.file:
+    if request.method == "POST" and not contract.file:
         form = ContractFileUploadForm(request.POST, request.FILES, instance=contract)
         if form.is_valid():
             form.save()
@@ -39,18 +45,20 @@ def render_contract(request, contract_id): #TODO: to CBV
     context = {
         "title": contract,
         "contract": contract,
-        'form': form if not contract.file else None
-
+        "form": form if not contract.file else None,
     }
     return render(request, "contracts/contract.html", context)
+
 
 """
 CREATE VIEW
 """
 
+
 class CounterpartyCreateView(ProjectBaseCreateView):
     model = Counterparty
     success_url = reverse_lazy("contracts:all_counterparties")
+
 
 class ContractCreateView(ParentChildrenCreateView):
     parent_model = Contract
@@ -59,11 +67,7 @@ class ContractCreateView(ParentChildrenCreateView):
     parent_form_class = ContractForm
     child_form_class = ContractCompositionForm
 
-    formset_kwargs = {
-        "extra": 0, 
-        "min_num": 1, 
-        "validate_min": True
-    }
+    formset_kwargs = {"extra": 0, "min_num": 1, "validate_min": True}
 
     def get_success_url(self):
         return reverse_lazy("contracts:render_contract", args=[self.object.pk])
@@ -85,9 +89,13 @@ def download_contract_file(request, pk):
         raise Http404("Файл не найден")
 
     file_path = contract.file.path
-    file_name = os.path.basename(file_path)  # Извлекается имя файла для заголовка Content-Disposition
+    file_name = os.path.basename(
+        file_path
+    )  # Извлекается имя файла для заголовка Content-Disposition
 
     try:
-        return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=file_name)
+        return FileResponse(
+            open(file_path, "rb"), as_attachment=True, filename=file_name
+        )
     except FileNotFoundError:
         raise Http404("Файл отсутствует на сервере")

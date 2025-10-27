@@ -15,30 +15,66 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Positions',
+            name="Positions",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='Должность')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100, verbose_name="Должность")),
             ],
             options={
-                'verbose_name': 'Должность',
-                'verbose_name_plural': 'Должности',
+                "verbose_name": "Должность",
+                "verbose_name_plural": "Должности",
             },
         ),
         migrations.CreateModel(
-            name='Staff',
+            name="Staff",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('surname', models.CharField(max_length=100, verbose_name='Фамилия')),
-                ('name', models.CharField(max_length=100, verbose_name='Имя')),
-                ('second_name', models.CharField(blank=True, max_length=100, null=True, verbose_name='Отчество')),
-                ('note', models.TextField(blank=True, null=True)),
-                ('position', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='staff.positions', verbose_name='Должность')),
-                ('username', models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("surname", models.CharField(max_length=100, verbose_name="Фамилия")),
+                ("name", models.CharField(max_length=100, verbose_name="Имя")),
+                (
+                    "second_name",
+                    models.CharField(
+                        blank=True, max_length=100, null=True, verbose_name="Отчество"
+                    ),
+                ),
+                ("note", models.TextField(blank=True, null=True)),
+                (
+                    "position",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="staff.positions",
+                        verbose_name="Должность",
+                    ),
+                ),
+                (
+                    "username",
+                    models.OneToOneField(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Сотрудник',
-                'verbose_name_plural': 'Сотрудники',
+                "verbose_name": "Сотрудник",
+                "verbose_name_plural": "Сотрудники",
             },
         ),
     ]

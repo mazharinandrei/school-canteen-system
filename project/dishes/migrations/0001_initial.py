@@ -8,77 +8,156 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='FoodCategory',
+            name="FoodCategory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='Название категории блюд')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=100, verbose_name="Название категории блюд"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Категория блюд',
-                'verbose_name_plural': 'Категории блюд',
+                "verbose_name": "Категория блюд",
+                "verbose_name_plural": "Категории блюд",
             },
         ),
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=20, verbose_name='Название продукта')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=20, verbose_name="Название продукта"),
+                ),
             ],
             options={
-                'verbose_name': 'Продукт',
-                'verbose_name_plural': 'Продукты',
+                "verbose_name": "Продукт",
+                "verbose_name_plural": "Продукты",
             },
         ),
         migrations.CreateModel(
-            name='Dish',
+            name="Dish",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='Название блюда')),
-                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='dishes.foodcategory', verbose_name='Категория')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=100, verbose_name="Название блюда"),
+                ),
+                (
+                    "category",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        to="dishes.foodcategory",
+                        verbose_name="Категория",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Блюдо',
-                'verbose_name_plural': 'Блюда',
+                "verbose_name": "Блюдо",
+                "verbose_name_plural": "Блюда",
             },
         ),
         migrations.CreateModel(
-            name='TechnologicalMap',
+            name="TechnologicalMap",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('calories', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('proteins', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('fats', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('carbohydrates', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('recipe', models.TextField()),
-                ('dish', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dishes.dish')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                ("calories", models.DecimalField(decimal_places=2, max_digits=5)),
+                ("proteins", models.DecimalField(decimal_places=2, max_digits=5)),
+                ("fats", models.DecimalField(decimal_places=2, max_digits=5)),
+                ("carbohydrates", models.DecimalField(decimal_places=2, max_digits=5)),
+                ("recipe", models.TextField()),
+                (
+                    "dish",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="dishes.dish"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Технологическая карта',
-                'verbose_name_plural': 'Технологические карты',
+                "verbose_name": "Технологическая карта",
+                "verbose_name_plural": "Технологические карты",
             },
         ),
         migrations.CreateModel(
-            name='TechnologicalMapComposition',
+            name="TechnologicalMapComposition",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('volume', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dishes.product')),
-                ('technological_map', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dishes.technologicalmap')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("volume", models.DecimalField(decimal_places=2, max_digits=5)),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="dishes.product"
+                    ),
+                ),
+                (
+                    "technological_map",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="dishes.technologicalmap",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Состав технологической карты',
-                'verbose_name_plural': 'Составы технологической карты',
+                "verbose_name": "Состав технологической карты",
+                "verbose_name_plural": "Составы технологической карты",
             },
         ),
         migrations.AddField(
-            model_name='technologicalmap',
-            name='products',
-            field=models.ManyToManyField(through='dishes.TechnologicalMapComposition', through_fields=('technological_map', 'product'), to='dishes.product'),
+            model_name="technologicalmap",
+            name="products",
+            field=models.ManyToManyField(
+                through="dishes.TechnologicalMapComposition",
+                through_fields=("technological_map", "product"),
+                to="dishes.product",
+            ),
         ),
     ]

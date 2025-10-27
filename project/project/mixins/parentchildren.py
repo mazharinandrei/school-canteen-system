@@ -3,12 +3,14 @@ from django.db import transaction
 
 from django import forms
 
+
 class ParentChildrenMixin:
     """
     Создан для форм, в которых одновременно создаётся:
     - один объект parent_model
     - множество объектов children_model, имеющих ForeignKey на parent_model
     """
+
     parent_model = None
     child_model = None
 
@@ -24,7 +26,7 @@ class ParentChildrenMixin:
         assert self.child_model is not None, "Не задан child_model"
         return inlineformset_factory(
             parent_model=self.parent_model,
-            model= self.child_model,
+            model=self.child_model,
             form=self.child_form_class,
             **self.formset_kwargs,
         )
@@ -34,10 +36,9 @@ class ParentChildrenMixin:
         Formset.deletion_widget = forms.HiddenInput
         if self.request.method == "POST":
             return Formset(
-                data=self.request.POST,
-                files=self.request.FILES,
-                instance=self.object)
-        
+                data=self.request.POST, files=self.request.FILES, instance=self.object
+            )
+
         else:
             return Formset(instance=self.object)
 
@@ -60,20 +61,18 @@ class ParentChildrenMixin:
             return super().form_valid(form)
         else:
             return self.form_invalid(form)
-        
+
     def form_invalid(self, form):
-        context = self.get_context_data(
-            form = form,
-            formset = self.get_formset())
+        context = self.get_context_data(form=form, formset=self.get_formset())
         return self.render_to_response(context)
-    
+
     def get_model(self):
         assert self.parent_model is not None, "Не задан parent_model"
         return self.parent_model
 
     def get_queryset(self):
         return self.get_model()._default_manager.all()
-    
+
     def get_form_class(self):
         assert self.parent_form_class is not None, "Не задан parent_form_class"
         return self.parent_form_class

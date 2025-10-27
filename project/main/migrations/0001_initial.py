@@ -11,175 +11,379 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('dishes', '0001_initial'),
+        ("dishes", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CycleMenu',
+            name="CycleMenu",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('week_number', models.IntegerField(verbose_name='Номер недели')),
-                ('week_day', models.IntegerField(choices=[(1, 'Понедельник'), (2, 'Вторник'), (3, 'Среда'), (4, 'Четверг'), (5, 'Пятница'), (6, 'Суббота'), (7, 'Воскресенье')], verbose_name='День недели')),
-                ('created_at', models.DateField()),
-                ('actual_since', models.DateField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("week_number", models.IntegerField(verbose_name="Номер недели")),
+                (
+                    "week_day",
+                    models.IntegerField(
+                        choices=[
+                            (1, "Понедельник"),
+                            (2, "Вторник"),
+                            (3, "Среда"),
+                            (4, "Четверг"),
+                            (5, "Пятница"),
+                            (6, "Суббота"),
+                            (7, "Воскресенье"),
+                        ],
+                        verbose_name="День недели",
+                    ),
+                ),
+                ("created_at", models.DateField()),
+                ("actual_since", models.DateField()),
             ],
             options={
-                'verbose_name': 'Цикличное меню',
-                'verbose_name_plural': 'Цикличное меню',
+                "verbose_name": "Цикличное меню",
+                "verbose_name_plural": "Цикличное меню",
             },
         ),
         migrations.CreateModel(
-            name='Grade',
+            name="Grade",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.IntegerField(verbose_name='Номер класса')),
-                ('character', models.CharField(max_length=1, verbose_name='Буква класса')),
-                ('students_number', models.IntegerField(verbose_name='Количество учеников')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("number", models.IntegerField(verbose_name="Номер класса")),
+                (
+                    "character",
+                    models.CharField(max_length=1, verbose_name="Буква класса"),
+                ),
+                (
+                    "students_number",
+                    models.IntegerField(verbose_name="Количество учеников"),
+                ),
             ],
             options={
-                'verbose_name': 'Класс',
-                'verbose_name_plural': 'Классы',
+                "verbose_name": "Класс",
+                "verbose_name_plural": "Классы",
             },
         ),
         migrations.CreateModel(
-            name='Holiday',
+            name="Holiday",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('start_date', models.DateField()),
-                ('end_date', models.DateField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("start_date", models.DateField()),
+                ("end_date", models.DateField()),
             ],
             options={
-                'verbose_name': 'Праздник',
-                'verbose_name_plural': 'Праздники',
+                "verbose_name": "Праздник",
+                "verbose_name_plural": "Праздники",
             },
         ),
         migrations.CreateModel(
-            name='MealType',
+            name="MealType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='Название приёма пищи')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=100, verbose_name="Название приёма пищи"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Приём пищи',
-                'verbose_name_plural': 'Приёмы пищи',
+                "verbose_name": "Приём пищи",
+                "verbose_name_plural": "Приёмы пищи",
             },
         ),
         migrations.CreateModel(
-            name='MenuRequirement',
+            name="MenuRequirement",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField(validators=[django.core.validators.MinValueValidator(datetime.date(2025, 9, 6))], verbose_name='Дата требования')),
-                ('is_issued', models.BooleanField(default=False)),
-                ('is_cooked', models.BooleanField(default=False)),
-                ('students_number', models.IntegerField(validators=[django.core.validators.MinValueValidator(1)], verbose_name='Количество учеников')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "date",
+                    models.DateField(
+                        validators=[
+                            django.core.validators.MinValueValidator(
+                                datetime.date(2025, 9, 6)
+                            )
+                        ],
+                        verbose_name="Дата требования",
+                    ),
+                ),
+                ("is_issued", models.BooleanField(default=False)),
+                ("is_cooked", models.BooleanField(default=False)),
+                (
+                    "students_number",
+                    models.IntegerField(
+                        validators=[django.core.validators.MinValueValidator(1)],
+                        verbose_name="Количество учеников",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Меню-требование',
-                'verbose_name_plural': 'Меню-требования',
+                "verbose_name": "Меню-требование",
+                "verbose_name_plural": "Меню-требования",
             },
         ),
         migrations.CreateModel(
-            name='StudentFeedingCategory',
+            name="StudentFeedingCategory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='Название категории питающихся')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=100, verbose_name="Название категории питающихся"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Категория питающихся',
-                'verbose_name_plural': 'Категории питающихся',
+                "verbose_name": "Категория питающихся",
+                "verbose_name_plural": "Категории питающихся",
             },
         ),
         migrations.CreateModel(
-            name='CycleMenuComposition',
+            name="CycleMenuComposition",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('volume_per_student', models.DecimalField(blank=True, decimal_places=2, max_digits=5, null=True)),
-                ('cycle_menu_day', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.cyclemenu')),
-                ('dish', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dishes.dish')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "volume_per_student",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, max_digits=5, null=True
+                    ),
+                ),
+                (
+                    "cycle_menu_day",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="main.cyclemenu"
+                    ),
+                ),
+                (
+                    "dish",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="dishes.dish"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Состав цикличного меню',
-                'verbose_name_plural': 'Составы цикличного меню',
+                "verbose_name": "Состав цикличного меню",
+                "verbose_name_plural": "Составы цикличного меню",
             },
         ),
         migrations.AddField(
-            model_name='cyclemenu',
-            name='dishes',
-            field=models.ManyToManyField(through='main.CycleMenuComposition', through_fields=('cycle_menu_day', 'dish'), to='dishes.dish'),
+            model_name="cyclemenu",
+            name="dishes",
+            field=models.ManyToManyField(
+                through="main.CycleMenuComposition",
+                through_fields=("cycle_menu_day", "dish"),
+                to="dishes.dish",
+            ),
         ),
         migrations.CreateModel(
-            name='ApplicationForStudentMeals',
+            name="ApplicationForStudentMeals",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField(verbose_name='Дата заявки')),
-                ('students_number', models.IntegerField(verbose_name='Количество учеников')),
-                ('grade', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.grade', verbose_name='Класс')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField(verbose_name="Дата заявки")),
+                (
+                    "students_number",
+                    models.IntegerField(verbose_name="Количество учеников"),
+                ),
+                (
+                    "grade",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="main.grade",
+                        verbose_name="Класс",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Заявка на питание',
-                'verbose_name_plural': 'Заявки на питание',
+                "verbose_name": "Заявка на питание",
+                "verbose_name_plural": "Заявки на питание",
             },
         ),
         migrations.AddField(
-            model_name='cyclemenu',
-            name='meal_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.mealtype', verbose_name='Приём пищи'),
+            model_name="cyclemenu",
+            name="meal_type",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                to="main.mealtype",
+                verbose_name="Приём пищи",
+            ),
         ),
         migrations.CreateModel(
-            name='MenuRequirementComposition',
+            name="MenuRequirementComposition",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('volume_per_student', models.DecimalField(decimal_places=2, max_digits=5, validators=[django.core.validators.MinValueValidator(0.1)])),
-                ('dish', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dishes.dish')),
-                ('meal_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.mealtype')),
-                ('menu_requirement', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.menurequirement')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "volume_per_student",
+                    models.DecimalField(
+                        decimal_places=2,
+                        max_digits=5,
+                        validators=[django.core.validators.MinValueValidator(0.1)],
+                    ),
+                ),
+                (
+                    "dish",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="dishes.dish"
+                    ),
+                ),
+                (
+                    "meal_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="main.mealtype"
+                    ),
+                ),
+                (
+                    "menu_requirement",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="main.menurequirement",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Состав меню',
-                'verbose_name_plural': 'Составы меню',
+                "verbose_name": "Состав меню",
+                "verbose_name_plural": "Составы меню",
             },
         ),
         migrations.AddField(
-            model_name='menurequirement',
-            name='dishes',
-            field=models.ManyToManyField(through='main.MenuRequirementComposition', through_fields=('menu_requirement', 'dish'), to='dishes.dish'),
+            model_name="menurequirement",
+            name="dishes",
+            field=models.ManyToManyField(
+                through="main.MenuRequirementComposition",
+                through_fields=("menu_requirement", "dish"),
+                to="dishes.dish",
+            ),
         ),
         migrations.CreateModel(
-            name='NutrientNormative',
+            name="NutrientNormative",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateField(auto_now_add=True)),
-                ('actual_since', models.DateField()),
-                ('calories', models.DecimalField(decimal_places=2, max_digits=8)),
-                ('proteins', models.DecimalField(decimal_places=2, max_digits=8)),
-                ('fats', models.DecimalField(decimal_places=2, max_digits=8)),
-                ('carbohydrates', models.DecimalField(decimal_places=2, max_digits=8)),
-                ('student_feeding_category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.studentfeedingcategory')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateField(auto_now_add=True)),
+                ("actual_since", models.DateField()),
+                ("calories", models.DecimalField(decimal_places=2, max_digits=8)),
+                ("proteins", models.DecimalField(decimal_places=2, max_digits=8)),
+                ("fats", models.DecimalField(decimal_places=2, max_digits=8)),
+                ("carbohydrates", models.DecimalField(decimal_places=2, max_digits=8)),
+                (
+                    "student_feeding_category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="main.studentfeedingcategory",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Норматив нутриентов',
-                'verbose_name_plural': 'Нормативы нутриентов',
+                "verbose_name": "Норматив нутриентов",
+                "verbose_name_plural": "Нормативы нутриентов",
             },
         ),
         migrations.AddField(
-            model_name='menurequirement',
-            name='student_feeding_category',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.studentfeedingcategory', verbose_name='Категория питающихся'),
+            model_name="menurequirement",
+            name="student_feeding_category",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                to="main.studentfeedingcategory",
+                verbose_name="Категория питающихся",
+            ),
         ),
         migrations.AddField(
-            model_name='grade',
-            name='student_feeding_category',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.studentfeedingcategory', verbose_name='Категория питания'),
+            model_name="grade",
+            name="student_feeding_category",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                to="main.studentfeedingcategory",
+                verbose_name="Категория питания",
+            ),
         ),
         migrations.AddField(
-            model_name='cyclemenu',
-            name='student_feeding_category',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main.studentfeedingcategory', verbose_name='Категория питающихся'),
+            model_name="cyclemenu",
+            name="student_feeding_category",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                to="main.studentfeedingcategory",
+                verbose_name="Категория питающихся",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='menurequirement',
-            unique_together={('date', 'student_feeding_category')},
+            name="menurequirement",
+            unique_together={("date", "student_feeding_category")},
         ),
     ]
