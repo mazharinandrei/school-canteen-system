@@ -60,7 +60,10 @@ def render_menu(request, date):
     menu_info = []
     cost_of_menu = 0
     no_cost = False
+
     try:
+        if date == "today":
+            date = localdate()
         menu_requirement = MenuRequirement.objects.get(date=date)
     except MenuRequirement.DoesNotExist:
         return render(request, "main/menu_404.html", {"date": date})
