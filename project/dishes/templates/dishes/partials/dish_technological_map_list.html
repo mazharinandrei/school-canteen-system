@@ -1,6 +1,6 @@
-{% if dish.list_technological_maps %}
+{% if dish.technological_maps.all %}
     <ul>
-        {% for tm in dish.list_technological_maps %}
+        {% for tm in dish.technological_maps.all %}
             <li><a href="technological_map/{{ tm.id }}"> ТТК от {{ tm.date }} </a></li>
         {% endfor %}
     </ul>
