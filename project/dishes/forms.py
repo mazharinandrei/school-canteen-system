@@ -66,11 +66,3 @@ class TechnologicalMapCompositionForm(forms.ModelForm):
         model = TechnologicalMapComposition
         fields = ("product", "volume")  # TODO: Хочу select2 в форме
         labels = {"product": "Продукт", "volume": "Объём"}
-
-
-TechnologicalMapFormSet = forms.inlineformset_factory(
-    TechnologicalMap,
-    TechnologicalMap.products.through,
-    form=TechnologicalMapCompositionForm,
-    extra=1,
-)

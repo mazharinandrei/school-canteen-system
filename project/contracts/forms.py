@@ -5,7 +5,6 @@ from .models import Contract, ContractComposition
 
 
 class ContractForm(forms.ModelForm):
-    # staff = forms.ModelChoiceField(queryset=Staff.objects.all(), widget=forms.HiddenInput(), required=False)
     class Meta:
         model = Contract
         fields = ["date", "counterparty", "note"]
@@ -35,11 +34,6 @@ class ContractCompositionForm(forms.ModelForm):
             ),
             "cost": forms.NumberInput(attrs={"placeholder": "Полная стоимость"}),
         }
-
-
-ContractFormSet = forms.inlineformset_factory(
-    Contract, Contract.products.through, form=ContractCompositionForm, extra=1
-)
 
 
 class ContractFileUploadForm(forms.ModelForm):
