@@ -132,15 +132,11 @@ class CycleMenu(models.Model):
     created_at = models.DateField()
     actual_since = models.DateField()
 
-    def get_composition(self):
-        return CycleMenuComposition.objects.filter(cycle_menu_day=self)
-
     def get_nutrients(self):
         menu_calories, menu_proteins, menu_fats, menu_carbohydrates = 0, 0, 0, 0
-        dishes = self.get_composition()
-        for dish in dishes:
+        for element in self.composition:
             dish_calories, dish_proteins, dish_fats, dish_carbohydrates = (
-                dish.dish.get_nutrients(volume=dish.volume_per_student)
+                element.dish.get_nutrients(volume=element.volume_per_student)
             )
             menu_calories += dish_calories
             menu_proteins += dish_proteins
@@ -158,7 +154,9 @@ class CycleMenu(models.Model):
 
 # Связь блюда и дня цикличного меню
 class CycleMenuComposition(models.Model):
-    cycle_menu_day = models.ForeignKey(CycleMenu, on_delete=models.PROTECT)
+    cycle_menu_day = models.ForeignKey(
+        CycleMenu, on_delete=models.PROTECT, related_name="composition"
+    )
 
     dish = models.ForeignKey(Dish, on_delete=models.PROTECT)
 
