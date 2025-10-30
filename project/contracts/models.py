@@ -9,9 +9,6 @@ from staff.models import Staff
 from dishes.models import Product
 
 
-# Create your models here.
-
-
 class Counterparty(models.Model):  # Контрагенты
     name = models.CharField("Наименование организации", max_length=300)
     address = models.CharField("Адрес", max_length=300)
@@ -73,7 +70,7 @@ class Contract(models.Model):
         return f"Договор с {self.counterparty} от {self.date}"
 
     def get_composition(self):
-        return ContractComposition.objects.filter(contract=self).annotate(
+        return self.composition.annotate(
             received_percent=ExpressionWrapper(
                 (F("received_volume") * 100) / F("total_volume"),
                 output_field=IntegerField(),
