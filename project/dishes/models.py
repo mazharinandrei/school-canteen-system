@@ -123,7 +123,3 @@ class TechnologicalMapComposition(models.Model):
     class Meta:
         verbose_name = "Состав технологической карты"
         verbose_name_plural = "Составы технологической карты"
-
-
-def get_dishes_with_no_tc():
-    return Dish.objects.exclude(id__in=TechnologicalMap.objects.values("dish"))
