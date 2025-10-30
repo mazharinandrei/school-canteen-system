@@ -3,9 +3,6 @@ from django.urls import reverse_lazy
 from django.utils.timezone import localdate
 
 
-# Create your models here.
-
-
 class FoodCategory(models.Model):  # TODO: добавить slug
     name = models.CharField(verbose_name="Название категории блюд", max_length=100)
 
@@ -37,16 +34,8 @@ class Dish(models.Model):
         verbose_name = "Блюдо"
         verbose_name_plural = "Блюда"
 
-    def list_technological_maps(self):
-        return TechnologicalMap.objects.filter(dish=self.id)
-
     def get_actual_technological_map(self):
-        try:
-            return TechnologicalMap.objects.filter(
-                dish=self.id, date__lte=localdate()
-            ).latest("date")
-        except Exception:
-            return None
+        return self.technological_maps.filter(date__lte=localdate()).latest()
 
     def get_nutrients(self, volume=200):
         """
@@ -85,7 +74,9 @@ class Product(models.Model):
 
 class TechnologicalMap(models.Model):
     date = models.DateField(verbose_name="ТТК актуально с даты")
-    dish = models.ForeignKey(Dish, on_delete=models.PROTECT)
+    dish = models.ForeignKey(
+        Dish, on_delete=models.PROTECT, related_name="technological_maps"
+    )
     calories = models.DecimalField(
         max_digits=5, decimal_places=2
     )  # TODO: validators = []
@@ -106,20 +97,11 @@ class TechnologicalMap(models.Model):
     def get_absolute_url(self):
         return reverse_lazy("dishes:technological_map_by_tm_id", args=[self.pk])
 
-    def get_composition(self):
-        try:
-            tmc = TechnologicalMapComposition.objects.filter(technological_map=self.id)
-            data2 = []
-            for i in tmc:
-                data2.append((i.product, i.volume))
-            return data2
-        except Product.DoesNotExist:
-            return "ТТК не найдено!"  # TODO: неправильно!
-
     def __str__(self):
         return f"ТТК {self.dish} от {self.date}"
 
     class Meta:
+        get_latest_by = "date"
         ordering = ["-date"]
         verbose_name = "Технологическая карта"
         verbose_name_plural = "Технологические карты"
