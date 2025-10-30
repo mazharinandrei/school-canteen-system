@@ -1,6 +1,4 @@
 from django.db.models import F
-
-from .models import TechnologicalMapComposition
 from contracts.services.services import get_product_cost
 
 
@@ -9,9 +7,8 @@ def get_dish_composition(dish, grams=100):
     Получить состав блюда
     """
     tm = dish.get_actual_technological_map()
-    tmc = TechnologicalMapComposition.objects.filter(technological_map=tm).annotate(
-        volume_per_portion=F("volume") / 100 * grams
-    )
+    tmc = tm.composition.annotate(volume_per_portion=F("volume") / 100 * grams)
+
     for el in tmc:
         try:
             el.cost = (
