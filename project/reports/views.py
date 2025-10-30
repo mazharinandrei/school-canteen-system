@@ -11,8 +11,7 @@ from main.models import (
     StudentFeedingCategory,
 )
 
-from dishes.models import Dish, get_dishes_with_no_tc
-
+from dishes.models import Dish, TechnologicalMap
 
 from dishes.services import get_dish_composition
 
@@ -29,10 +28,16 @@ from contracts.services.services import get_product_cost
 def render_costs_of_dishes_report(request):
     dishes = Dish.objects.all()
     products_without_price = []
-    dishes_with_no_tm = get_dishes_with_no_tc
+    dishes_with_no_tm = []
     for dish in dishes:
         dish.cost = 0
-        dish.composition = get_dish_composition(dish)
+
+        try:
+            dish.composition = get_dish_composition(dish)
+        except TechnologicalMap.DoesNotExist:
+            dishes_with_no_tm.append(dish)
+            continue
+
         for el in dish.composition:
             if get_product_cost(el.product):
                 el.cost = (
