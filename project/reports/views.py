@@ -13,47 +13,47 @@ from main.models import (
 
 from dishes.models import Dish, TechnologicalMap
 
-from dishes.services import get_dish_composition
-
 from reports.services.abc_analysis import (
     generate_abc_analysis_table,
     get_products_by_categories,
 )
 
 
-from contracts.services.services import get_product_cost
+from contracts.services.services import get_actual_product_costs
 
 
 @login_required
 def render_costs_of_dishes_report(request):
-    dishes = Dish.objects.all()
+    dishes = (
+        Dish.objects.all()
+        .prefetch_related("technological_maps")
+        .prefetch_related("technological_maps__composition")
+        .prefetch_related("technological_maps__composition__product")
+    )
     products_without_price = []
     dishes_with_no_tm = []
+
+    product_costs = {
+        product.name: product.avg_cost for product in get_actual_product_costs()
+    }
+
     for dish in dishes:
         dish.cost = 0
 
         try:
-            dish.composition = get_dish_composition(dish)
+            # TODO: решение нужно переработать
+            dish.composition = list(dish.technological_maps.latest().composition.all())
         except TechnologicalMap.DoesNotExist:
             dishes_with_no_tm.append(dish)
             continue
 
         for el in dish.composition:
-            if get_product_cost(el.product):
-                el.cost = (
-                    get_product_cost(el.product) / 1000 * float(el.volume_per_portion)
-                )
-            else:
-                el.cost = 0
-
-        for el in dish.composition:
-            if el.cost:
+            if product_costs.get(el.product.name):
+                el.cost = product_costs.get(el.product.name) / 1000 * el.volume
                 dish.cost += el.cost
             else:
-                dish.cost = 0
-                if el.product not in products_without_price:
-                    products_without_price.append(el.product)
-                break
+                el.cost = 0
+                products_without_price.append(el.product)
 
     context = {
         "title": "Отчёт по стоимости блюд",
@@ -77,7 +77,6 @@ def render_nutrients_normative_report_first_page(request):
 
 
 @login_required
-# Create your views here.
 def render_nutrients_normative_report(request):
     student_feeding_category = request.GET["category_select"]
     try:
