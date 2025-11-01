@@ -22,7 +22,7 @@
                     <div class="card mb-3">
                         <div class="card-header"> <p class="fw-bold">{{ dish }} - {{ dish.cost|floatformat:2 }} ₽</p> </div>
                         <ul class="list-group list-group-flush">{% for el in dish.composition %}
-                            <li class="list-group-item"> {{ el.product }} ({{ el.volume_per_portion|floatformat:2 }} гр.) - {{ el.cost|floatformat:2 }} ₽</li>
+                            <li class="list-group-item"> {{ el.product }} ({{ el.volume|floatformat:2 }} гр.) - {{ el.cost|floatformat:2 }} ₽</li>
                             {% endfor %}</ul>
                     </div>
                 {% endif %}
