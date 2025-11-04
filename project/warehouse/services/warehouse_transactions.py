@@ -92,6 +92,38 @@ def product_transfer(warehouse_from, warehouse_to, product, volume, staff, note)
 
 
 @transaction.atomic
+def issue_menu(
+    created_by: Staff,
+    menu: MenuRequirement | int,
+    from_warehouse_name: str,
+    to_warehouse_name: str = "Кухня",
+    note: str = None,
+):
+    if not isinstance(menu, MenuRequirement):
+        menu = MenuRequirement.objects.get(pk=menu)
+
+    warehouse_from, _ = Warehouse.objects.get_or_create(name=from_warehouse_name)
+    warehouse_to, _ = Warehouse.objects.get_or_create(name=to_warehouse_name)
+
+    if note is None:
+        note = f'Отпуск продукта на кухню по "{menu}"'
+
+    for menu_position in menu.composition.all():
+        tm = menu_position.dish.get_actual_technological_map()
+        for tm_position in tm.composition.all():
+            product_transfer(
+                warehouse_from=warehouse_from,
+                warehouse_to=warehouse_to,
+                product=tm_position.product,
+                volume=menu_position.volume_per_student * menu.students_number / 1000,
+                staff=created_by,
+                note=note,
+            )
+    menu.is_issued = True
+    menu.save()
+
+
+@transaction.atomic
 def cook_menu(
     created_by: Staff,
     menu: MenuRequirement | int,
