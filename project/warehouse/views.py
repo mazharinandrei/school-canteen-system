@@ -1,4 +1,3 @@
-from decimal import Decimal
 
 from django.contrib.auth.decorators import permission_required, login_required
 from django.db import transaction
@@ -6,28 +5,23 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from project.views import ProjectBaseListView
-from .exceptions import NotEnoughProductToWriteOff
+from .exceptions import NotEnoughProductToWriteOff, NotEnoughProductToTransfer
 
 from .forms import AcceptanceForm, NewWriteOffForm
 from .models import (
     Acceptance,
     WriteOff,
     Availability,
-    Warehouse,
     ProductTransfer,
-    WriteOffCause,
 )
 from contracts.models import Contract
 
-from main.services.menu_info import get_menu_product_composition
-from main.models import MenuRequirement
 
 from staff.models import get_staff_by_user
 
 from .services.warehouse_transactions import (
-    product_transfer,
-    write_off_from_warehouse,
     cook_menu,
+    issue_menu,
 )
 
 
@@ -224,35 +218,24 @@ def add_product_to_write_off(request):
 
 @transaction.atomic
 @permission_required("warehouse.add_producttransfer")
-def issue_menu(request):
-    staff = get_staff_by_user(request.user)
+def on_issue_menu_button_click(request):
     errors = []
-    if request.method == "POST":
-        warehouse_from = Warehouse.objects.get(name="Основной")
-        warehouse_to = Warehouse.objects.get(name="Кухня")
-        menu_requirement_id = request.POST.get("menu_requirement", None)
-        menu_requirement = MenuRequirement.objects.get(id=menu_requirement_id)
-        if menu_requirement_id:
-            menu_products = get_menu_product_composition(menu_requirement)
-            for el in menu_products:
-                try:
-                    product_transfer(
-                        warehouse_from=warehouse_from,
-                        warehouse_to=warehouse_to,
-                        product=el["product"],
-                        volume=Decimal(el["volume"] / 1000),
-                        staff=staff,
-                        note=f"Отпуск продукта по {menu_requirement}",
-                    )
-                except Exception as e:
-                    return HttpResponse(e)
-            menu_requirement.is_issued = True
-            menu_requirement.save()
-            return HttpResponse("Отправлено!")
-        else:
-            return HttpResponse("Ошибка!")
-
-    return HttpResponse("Ошибка!")
+    try:
+        issue_menu(
+            created_by=get_staff_by_user(request.user),
+            menu=request.POST.get("menu_requirement", None),
+            from_warehouse_name="Основной",
+        )
+    except NotEnoughProductToTransfer as e:
+        errors.append(
+            f'На складе "{e.warehouse_name}" '
+            f'продукта "{e.product_name}" меньше, '
+            f"чем планируется переместить на кухню"
+        )
+    if errors:
+        return HttpResponse("\n".join(errors))
+    else:
+        return HttpResponse("Отправлено!")
 
 
 @transaction.atomic

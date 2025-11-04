@@ -30,7 +30,7 @@ urlpatterns = [
         views.render_acceptance_form,
         name="render-acceptance-form",
     ),
-    path("issue-menu", views.issue_menu, name="issue_menu"),
+    path("issue-menu", views.on_issue_menu_button_click, name="issue_menu"),
     path("transfers", views.ProductTransferListView.as_view(), name="transfers"),
     path("cook_menu", views.on_cook_menu_button_click, name="cook_menu"),
 ]
