@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 from dishes.models import Dish
@@ -301,16 +302,19 @@ class ApplicationForStudentMeals(models.Model):
     grade = models.ForeignKey(Grade, on_delete=models.PROTECT, verbose_name="Класс")
     students_number = models.IntegerField(verbose_name="Количество учеников")
 
-    def __str__(self):
-        return f"Заявка на питание {self.grade} класса от {self.date}"
-
-    def can_be_updated_or_deleted(self):
-        if self.date <= localdate() + timedelta(days=2):
-            return False
-        else:
-            return True
-
     class Meta:
         ordering = ["-date"]
         verbose_name = "Заявка на питание"
         verbose_name_plural = "Заявки на питание"
+
+    def __str__(self):
+        return f"Заявка на питание {self.grade} класса от {self.date}"
+
+    def can_be_updated_or_deleted(self):
+        return self.date > (localdate() + timedelta(days=1))
+
+    def delete(self, using=None, keep_parents: bool = False):
+        if self.can_be_updated_or_deleted():
+            super().delete(using=using, keep_parents=keep_parents)
+        else:
+            raise ValidationError("Can't delete this application")

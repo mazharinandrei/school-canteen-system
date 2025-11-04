@@ -5,11 +5,11 @@
   href="{% url 'main:create_application_for_student_meals' %}"
   >Добавить заявку</a
 >
-{% endblock %} {% block content%} {{ total_by_student_feeding_category }}
+{% endblock %} {% block content%}
 
 <div class="card mb-3">
   <div class="card-header">
-    <p class="fw-bold mb-0">Общее количество учащихся на {{ today }}</p>
+    <p class="fw-bold mb-0">Общее количество учащихся на {{ tomorrow }}</p>
   </div>
   <div class="card-body">
     {% if total_by_student_feeding_category %}
