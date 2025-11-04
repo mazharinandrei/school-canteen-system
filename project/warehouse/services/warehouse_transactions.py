@@ -1,6 +1,9 @@
 from django.utils.timezone import localtime
 
-from ..models import Availability, WriteOff, ProductTransfer
+from main.models import MenuRequirement
+from staff.models import Staff
+from ..exceptions import NotEnoughProductToWriteOff, NotEnoughProductToTransfer
+from ..models import Availability, WriteOff, ProductTransfer, Warehouse, WriteOffCause
 
 from contracts.models import ContractComposition
 
@@ -32,13 +35,12 @@ def is_volume_more_than_availability(product, warehouse, volume):
         return availability < volume
 
 
-def write_off_from_warehouse(product, volume, warehouse, cause, note):
-    print(product, volume, warehouse, cause, note)
+def write_off_from_warehouse(product, volume, warehouse, cause, created_by, note):
     availability = get_availability_or_zero(product, warehouse)
 
     if is_volume_more_than_availability(product, warehouse, volume):
-        raise Exception(
-            f"На складе {warehouse} продукта {product} меньше, чем планируется списать"
+        raise NotEnoughProductToWriteOff(
+            warehouse_name=warehouse.name, product_name=product.name
         )
     write_off = WriteOff.objects.create(
         product=product,
@@ -48,17 +50,18 @@ def write_off_from_warehouse(product, volume, warehouse, cause, note):
         note=note,
         datetime=localtime(),
     )
-    print(write_off)
+
     availability.volume -= volume
     availability.save()
-    print("Списание удалось!")
+
     return write_off
 
 
 def product_transfer(warehouse_from, warehouse_to, product, volume, staff, note):
-
     if is_volume_more_than_availability(product, warehouse_from, volume):
-        raise Exception(f"Недостаточно {product} для перемещения")
+        raise NotEnoughProductToTransfer(
+            warehouse_from_name=warehouse_from, product_name=product
+        )
 
     ProductTransfer.objects.create(
         warehouse_from=warehouse_from,
