@@ -32,5 +32,5 @@ urlpatterns = [
     ),
     path("issue-menu", views.issue_menu, name="issue_menu"),
     path("transfers", views.ProductTransferListView.as_view(), name="transfers"),
-    path("cook_menu", views.cook_menu, name="cook_menu"),
+    path("cook_menu", views.on_cook_menu_button_click, name="cook_menu"),
 ]
