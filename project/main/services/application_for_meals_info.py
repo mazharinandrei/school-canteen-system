@@ -48,9 +48,7 @@ def get_grades_without_applications(student_feeding_category):
     for grade in Grade.objects.filter(
         student_feeding_category=student_feeding_category
     ):
-        print(today_applications.filter(grade=grade))
         if not today_applications.filter(grade=grade.id).exists():
-            print(grade.id)
             result.append(grade)
 
     return result
