@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django.contrib.auth.decorators import permission_required, login_required
+from django.core.exceptions import ValidationError
 from django.forms import formset_factory
 
 from django.shortcuts import render, redirect
@@ -373,16 +374,15 @@ class ApplicationCreateView(ProjectBaseCreateView):
 
 class ApplicationListView(ProjectBaseListView):
     model = ApplicationForStudentMeals
-    template_name = "main/list_application_for_student_meals.html"  # TODO: переделать
+    template_name = "main/list_application_for_student_meals.html"
+    context_object_name = "applications"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["total_by_student_feeding_category"] = (
             get_total_by_student_feeding_category()
         )
-        context["today"] = (
-            localdate() + timedelta(days=1),
-        )  # TODO: если это завтра, почему это today?
+        context["tomorrow"] = localdate() + timedelta(days=1)
         return context
 
 
@@ -412,18 +412,17 @@ def render_application_for_student_meals_modal_form(request, pk):
 
 @permission_required("main.delete_applicationforstudentmeals")
 def delete_application_for_student_meals(request, pk):
-    applications_for_student_meals_list = ApplicationForStudentMeals.objects.get(id=pk)
+    context = {}
+    application = ApplicationForStudentMeals.objects.get(id=pk)
 
-    if applications_for_student_meals_list.date <= localdate():
-        pass
-    else:
-        applications_for_student_meals_list.delete()
-    applications_for_student_meals_list = (
-        ApplicationForStudentMeals.objects.all().order_by("-date")
-    )
-    context = {
-        "applications": applications_for_student_meals_list,
-    }
+    try:
+        application.delete()
+
+    except ValidationError:
+        context["error"] = "Нельзя удалить эту заявку"
+
+    context["applications"] = ApplicationForStudentMeals.objects.all()
+
     return render(
         request, "main/partials/applications_for_student_meals_list.html", context
     )
