@@ -3,8 +3,21 @@ from django.test import TestCase, Client
 from django.urls import reverse
 
 from contracts.models import Contract, Counterparty, ContractComposition
-from dishes.models import Product
+from dishes.models import (
+    Product,
+    Dish,
+    FoodCategory,
+    TechnologicalMap,
+    TechnologicalMapComposition,
+)
+from main.models import (
+    MenuRequirement,
+    StudentFeedingCategory,
+    MenuRequirementComposition,
+    MealType,
+)
 from staff.models import Staff, Positions
+from warehouse.exceptions import NotEnoughProductToWriteOff
 from warehouse.models import (
     Warehouse,
     Acceptance,
@@ -13,6 +26,7 @@ from warehouse.models import (
     WriteOffCause,
     ProductTransfer,
 )
+from warehouse.services.warehouse_transactions import cook_menu
 
 
 class TestWarehousePages(TestCase):
@@ -153,4 +167,80 @@ class TestWarehousePages(TestCase):
 
         self.assertContains(
             response, text=product_transfer.product.name, status_code=200
+        )
+
+
+class TestWarehouseTransactions(TestCase):
+    def setUp(self):
+        position = Positions.objects.create(name="position")
+        self.staff = Staff.objects.create(
+            surname="surname", name="staff", position=position
+        )
+        student_feeding_category = StudentFeedingCategory.objects.create(
+            name="student_feeding_category"
+        )
+        self.menu = MenuRequirement.objects.create(
+            date="2024-03-04",
+            student_feeding_category=student_feeding_category,
+            students_number=10,
+        )
+        self.meal_type = MealType.objects.create(name="meal_type")
+        self.product = Product.objects.create(name="product1")
+        food_category = FoodCategory.objects.create(name="food_category")
+        self.dish = Dish.objects.create(category=food_category, name="няяяяя")
+        tm = TechnologicalMap.objects.create(
+            date="2024-04-03",
+            dish=self.dish,
+            calories=1,
+            proteins=1,
+            fats=1,
+            carbohydrates=1,
+            recipe="...",
+        )
+
+        TechnologicalMapComposition.objects.create(
+            technological_map=tm,
+            product=self.product,
+            volume=100,
+        )
+
+    def test_cook_empty_menu(self):
+        cook_menu(created_by=self.staff, menu=self.menu)
+        self.assertEqual(WriteOff.objects.count(), 0)
+
+    def test_cook_menu_not_enough_product(self):
+        MenuRequirementComposition.objects.create(
+            menu_requirement=self.menu,
+            meal_type=self.meal_type,
+            dish=self.dish,
+            volume_per_student=100,
+        )
+        Availability.objects.all().delete()
+        with self.assertRaises(
+            NotEnoughProductToWriteOff,
+            msg=f"The product {self.product} must not be enough to be written off",
+        ):
+            cook_menu(created_by=self.staff, menu=self.menu)
+
+    def test_cook_menu(self):
+        warehouse = Warehouse.objects.create(name="Кухня")
+        Availability.objects.create(warehouse=warehouse, product=self.product, volume=1)
+        MenuRequirementComposition.objects.create(
+            menu_requirement=self.menu,
+            meal_type=self.meal_type,
+            dish=self.dish,
+            volume_per_student=100,
+        )
+        cook_menu(created_by=self.staff, menu=self.menu)
+        self.assertEqual(
+            first=WriteOff.objects.filter(
+                warehouse=warehouse, product=self.product, volume=1
+            ).count(),
+            second=1,
+            msg="There must be only one write-off",
+        )
+        self.assertEqual(
+            self.menu.is_cooked,
+            True,
+            msg="The menu must be marked as cooked",
         )
