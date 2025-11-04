@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.utils.timezone import localtime
 
 from main.models import MenuRequirement
@@ -42,6 +43,7 @@ def write_off_from_warehouse(product, volume, warehouse, cause, created_by, note
         raise NotEnoughProductToWriteOff(
             warehouse_name=warehouse.name, product_name=product.name
         )
+
     write_off = WriteOff.objects.create(
         product=product,
         volume=volume,
@@ -49,6 +51,7 @@ def write_off_from_warehouse(product, volume, warehouse, cause, created_by, note
         cause=cause,
         note=note,
         datetime=localtime(),
+        staff=created_by,
     )
 
     availability.volume -= volume
@@ -86,3 +89,36 @@ def product_transfer(warehouse_from, warehouse_to, product, volume, staff, note)
 
     availability_warehouse_from.save()
     availability_warehouse_to.save()
+
+
+@transaction.atomic
+def cook_menu(
+    created_by: Staff,
+    menu: MenuRequirement | int,
+    note: str = None,
+    warehouse_name: str = "Кухня",
+    cause_name: str = "Приготовление блюд",
+):
+    if not isinstance(menu, MenuRequirement):
+        menu = MenuRequirement.objects.get(pk=menu)
+
+    warehouse, _ = Warehouse.objects.get_or_create(name=warehouse_name)
+    cause, _ = WriteOffCause.objects.get_or_create(name=cause_name)
+
+    if note is None:
+        note = f'Списание продукта по "{menu}"'
+
+    for menu_position in menu.composition.all():
+        tm = menu_position.dish.get_actual_technological_map()
+        for tm_position in tm.composition.all():
+            write_off_from_warehouse(
+                warehouse=warehouse,
+                product=tm_position.product,
+                volume=menu_position.volume_per_student * menu.students_number / 1000,
+                cause=cause,
+                note=note,
+                created_by=created_by,
+            )
+
+    menu.is_cooked = True
+    menu.save()

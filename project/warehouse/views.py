@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from project.views import ProjectBaseListView
+from .exceptions import NotEnoughProductToWriteOff
 
 from .forms import AcceptanceForm, NewWriteOffForm
 from .models import (
@@ -23,7 +24,11 @@ from main.models import MenuRequirement
 
 from staff.models import get_staff_by_user
 
-from .services.warehouse_transactions import product_transfer, write_off_from_warehouse
+from .services.warehouse_transactions import (
+    product_transfer,
+    write_off_from_warehouse,
+    cook_menu,
+)
 
 
 class WarehouseListView(ProjectBaseListView):
@@ -252,31 +257,18 @@ def issue_menu(request):
 
 @transaction.atomic
 @permission_required("warehouse.add_writeoff")
-def cook_menu(request):
-    staff = get_staff_by_user(request.user)
+def on_cook_menu_button_click(request):
     errors = []
-    if request.method == "POST":
-        warehouse = Warehouse.objects.get(name="Кухня")
-        cause = WriteOffCause.objects.get(name="Приготовление блюд")
-        menu_requirement_id = request.POST.get("menu_requirement", None)
-        menu_requirement = MenuRequirement.objects.get(id=menu_requirement_id)
-        if menu_requirement_id:
-            menu_products = get_menu_product_composition(menu_requirement)
-            for el in menu_products:
-                try:
-                    write_off_from_warehouse(
-                        product=el["product"],
-                        volume=Decimal(el["volume"] / 1000),
-                        warehouse=warehouse,
-                        cause=cause,
-                        note=f"Списание продукта по {menu_requirement}",
-                    )
-                except Exception as e:
-                    return HttpResponse(e)
-            menu_requirement.is_cooked = True
-            menu_requirement.save()
-            return HttpResponse("Отправлено!")
-        else:
-            return HttpResponse("Ошибка!")
-
-    return HttpResponse("Ошибка!")
+    try:
+        cook_menu(
+            menu=request.POST.get("menu_requirement", None),
+            created_by=get_staff_by_user(request.user),
+        )
+    except NotEnoughProductToWriteOff as e:
+        errors.append(
+            f'На складе "{e.warehouse_name}" продукта "{e.product_name}" меньше, чем планируется списать'
+        )
+    if errors:
+        return HttpResponse("\n".join(errors))
+    else:
+        return HttpResponse("Отправлено!")
