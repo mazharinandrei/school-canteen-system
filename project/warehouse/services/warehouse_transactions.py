@@ -30,7 +30,7 @@ def get_availability_or_zero(product, warehouse):
 
 def is_volume_more_than_availability(product, warehouse, volume):
     availability = get_availability_or_zero(product, warehouse)
-    if type(availability) == Availability:
+    if isinstance(availability, Availability):
         return availability.volume < volume
     else:
         return availability < volume
@@ -79,7 +79,7 @@ def product_transfer(warehouse_from, warehouse_to, product, volume, staff, note)
     availability_warehouse_from = get_availability_or_zero(product, warehouse_from)
     availability_warehouse_to = get_availability_or_zero(product, warehouse_to)
 
-    if type(availability_warehouse_to) != Availability:
+    if not isinstance(availability_warehouse_to, Availability):
         availability_warehouse_to = Availability.objects.create(
             product=product, warehouse=warehouse_to, volume=0
         )

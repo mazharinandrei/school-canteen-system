@@ -18,10 +18,9 @@ def is_holiday(date):
 
 
 def exclude_holidays_from_range(start_date, end_date):
-
-    if type(start_date) == str:
+    if isinstance(start_date, str):
         start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-    if type(end_date) == str:
+    if isinstance(end_date, str):
         end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
     current_date = start_date
 
@@ -59,7 +58,7 @@ def products_calc_by_date_interval(
                         availability = get_availability_or_zero(
                             dish_composition.product, 1
                         )
-                        if type(availability) != int:
+                        if not isinstance(availability, int):
 
                             availability = availability.volume
 
