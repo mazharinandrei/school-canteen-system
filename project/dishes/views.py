@@ -2,6 +2,7 @@ from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 
+from export.services.export_dishes import generate_dishes_file
 from project.views import (
     ProjectBaseCreateView,
     ProjectBaseDetailView,
