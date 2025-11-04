@@ -17,7 +17,7 @@ from main.models import (
     MealType,
 )
 from staff.models import Staff, Positions
-from warehouse.exceptions import NotEnoughProductToWriteOff
+from warehouse.exceptions import NotEnoughProductToWriteOff, NotEnoughProductToTransfer
 from warehouse.models import (
     Warehouse,
     Acceptance,
@@ -26,7 +26,7 @@ from warehouse.models import (
     WriteOffCause,
     ProductTransfer,
 )
-from warehouse.services.warehouse_transactions import cook_menu
+from warehouse.services.warehouse_transactions import cook_menu, issue_menu
 
 
 class TestWarehousePages(TestCase):
@@ -243,4 +243,53 @@ class TestWarehouseTransactions(TestCase):
             self.menu.is_cooked,
             True,
             msg="The menu must be marked as cooked",
+        )
+
+    def test_issue_empty_menu(self):
+        issue_menu(
+            created_by=self.staff, menu=self.menu, from_warehouse_name="Основной"
+        )
+        self.assertEqual(ProductTransfer.objects.count(), 0)
+
+    def test_issue_menu_not_enough_product(self):
+        MenuRequirementComposition.objects.create(
+            menu_requirement=self.menu,
+            meal_type=self.meal_type,
+            dish=self.dish,
+            volume_per_student=100,
+        )
+        Availability.objects.all().delete()
+        with self.assertRaises(
+            NotEnoughProductToTransfer,
+            msg=f"The product {self.product} must not be enough to be transfer",
+        ):
+            issue_menu(
+                created_by=self.staff, menu=self.menu, from_warehouse_name="Основной"
+            )
+
+    def test_issue_menu(self):
+        warehouse = Warehouse.objects.create(name="Основной")
+        Availability.objects.create(warehouse=warehouse, product=self.product, volume=1)
+        MenuRequirementComposition.objects.create(
+            menu_requirement=self.menu,
+            meal_type=self.meal_type,
+            dish=self.dish,
+            volume_per_student=100,
+        )
+        issue_menu(
+            created_by=self.staff,
+            menu=self.menu,
+            from_warehouse_name="Основной",
+        )
+        self.assertEqual(
+            first=ProductTransfer.objects.filter(
+                warehouse_from=warehouse, product=self.product, volume=1
+            ).count(),
+            second=1,
+            msg="There must be only one product transfer",
+        )
+        self.assertEqual(
+            self.menu.is_issued,
+            True,
+            msg="The menu must be marked as issued",
         )
