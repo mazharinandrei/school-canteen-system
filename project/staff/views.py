@@ -44,16 +44,17 @@ class PositionCreateView(ProjectBaseCreateView):
     model = Positions
 
 
-@permission_required("staff.view_staff")
-def render_staff(request, staff_id):
-    staff = Staff.objects.get(id=staff_id)
-    contracts = Contract.objects.filter(staff=staff)
-    context = {
-        "title": f"Информация о сотруднике {staff.surname_and_initials()}.",
-        "staff": staff,
-        "contracts": contracts,
-    }
-    return render(request, "staff.html", context)
+class StaffDetailView(ProjectBaseDetailView):
+    model = Staff
+    template_name = "staff.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["contracts"] = Contract.objects.filter(staff=self.object.pk)
+        context["title"] = (
+            f"Информация о сотруднике {self.object.surname_and_initials()}"
+        )
+        return context
 
 
 @permission_required("staff.view_position")
