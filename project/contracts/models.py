@@ -1,7 +1,7 @@
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 
 from django.db import models
-from django.db.models import Avg, ExpressionWrapper, F, IntegerField, FloatField
+from django.db.models import ExpressionWrapper, F, IntegerField, FloatField
 from django.urls import reverse
 
 from staff.models import Staff
@@ -118,38 +118,3 @@ class ContractComposition(models.Model):
     class Meta:
         verbose_name = "Состав договора"
         verbose_name_plural = "Составы договоров"
-
-
-def get_cost_of_product(product):
-    actual_contracts = Contract.objects.filter(is_actual=True)
-
-    # Получаем средние значения стоимости и объема для актуальных контрактов
-    avg_data = ContractComposition.objects.filter(
-        product=product.id, contract__in=actual_contracts
-    ).aggregate(avg_cost=Avg("cost"), avg_volume=Avg("total_volume"))
-
-    cost = avg_data.get("avg_cost")
-    volume = avg_data.get("avg_volume")
-
-    # Если данные найдены, считаем среднюю стоимость за кг
-    if cost is not None and volume not in [None, 0]:
-        try:
-            return Decimal(cost) / Decimal(volume)
-        except (InvalidOperation, ZeroDivisionError):
-            return None
-
-    # Если актуальных контрактов нет, ищем данные среди всех записей
-    avg_data = ContractComposition.objects.filter(product=product.id).aggregate(
-        avg_cost=Avg("cost"), avg_volume=Avg("total_volume")
-    )
-
-    cost = avg_data.get("avg_cost")
-    volume = avg_data.get("avg_volume")
-
-    if cost is not None and volume not in [None, 0]:
-        try:
-            return Decimal(cost) / Decimal(volume)
-        except (InvalidOperation, ZeroDivisionError):
-            return None
-
-    return None
