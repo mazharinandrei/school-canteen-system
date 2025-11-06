@@ -1,54 +1,38 @@
 from datetime import timedelta
 
+from django.db.models import Sum, F, Q, Value
+from django.db.models.functions import Coalesce
 from django.utils.timezone import localdate
 
 from main.models import ApplicationForStudentMeals, Grade, StudentFeedingCategory
 
 
-def get_total_by_student_feeding_category():
-    total_by_student_feeding_category_raw = {}
-    total_by_student_feeding_category = []
-
-    today_applications = ApplicationForStudentMeals.objects.filter(
-        date=localdate() + timedelta(days=1)
+def get_grades_without_applications():
+    tomorrow_applications = ApplicationForStudentMeals.objects.filter(
+        date=localdate() + timedelta(days=1),
     )
 
-    for student_feeding_category in StudentFeedingCategory.objects.all():
-        total_by_student_feeding_category_raw[student_feeding_category] = 0
+    grades_not_in_tomorrow_applications = Grade.objects.exclude(
+        pk__in=tomorrow_applications.values("grade")
+    ).annotate(student_feeding_category_name=F("student_feeding_category__name"))
 
-    for application in today_applications:
-        category = application.grade.student_feeding_category
-        if category in total_by_student_feeding_category_raw:
-            total_by_student_feeding_category_raw[
-                category
-            ] += application.students_number
-        else:
-            total_by_student_feeding_category_raw[category] = (
-                application.students_number
-            )
+    return grades_not_in_tomorrow_applications
 
-    for key, value in total_by_student_feeding_category_raw.items():
-        total_by_student_feeding_category.append(
-            {
-                "student_feeding_category": key,
-                "total": value,
-                "grades_without_applications": get_grades_without_applications(key),
-            }
+
+def get_total_by_student_feeding_category(date=localdate() + timedelta(days=1)):
+    grades_without_applications = get_grades_without_applications()
+    result = StudentFeedingCategory.objects.annotate(
+        total=Coalesce(
+            Sum(
+                "grade__applicationforstudentmeals__students_number",
+                filter=Q(grade__applicationforstudentmeals__date=date),
+            ),
+            Value(0),
+        ),
+        student_feeding_category=F("name"),
+    ).values("student_feeding_category", "total")
+    for row in result:
+        row["grades_without_applications"] = grades_without_applications.filter(
+            student_feeding_category_name=row["student_feeding_category"]
         )
-
-    return total_by_student_feeding_category
-
-
-def get_grades_without_applications(student_feeding_category):
-    result = []
-    today_applications = ApplicationForStudentMeals.objects.filter(
-        date=localdate() + timedelta(days=1)
-    )
-
-    for grade in Grade.objects.filter(
-        student_feeding_category=student_feeding_category
-    ):
-        if not today_applications.filter(grade=grade.id).exists():
-            result.append(grade)
-
     return result

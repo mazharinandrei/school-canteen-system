@@ -377,6 +377,9 @@ class ApplicationListView(ProjectBaseListView):
     template_name = "main/list_application_for_student_meals.html"
     context_object_name = "applications"
 
+    def get_queryset(self):
+        return self.model.objects.select_related("grade")
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["total_by_student_feeding_category"] = (
