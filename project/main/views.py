@@ -93,7 +93,7 @@ def render_menu(request, date):
             )
         menu_info.append(meal_info)
 
-    nutrients, no_tm = get_menu_nutrients(menu_requirement)
+    nutrients = get_menu_nutrients(menu_requirement)
 
     try:
         full_composition = get_menu_product_composition(menu_requirement)
@@ -113,7 +113,7 @@ def render_menu(request, date):
         "menu_info": menu_info,
         "full_composition": full_composition,
         "nutrients": nutrients,
-        "no_tm": no_tm,
+        "no_tm": Dish.objects.without_tm().all(),
         "cost": cost_of_menu,
         "no_cost": no_cost,
     }

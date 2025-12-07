@@ -17,6 +17,11 @@ class FoodCategory(models.Model):  # TODO: добавить slug
         return reverse_lazy("dishes:food_category", args=[self.pk])
 
 
+class DishQuerySet(models.QuerySet):
+    def without_tm(self):
+        return self.exclude(id__in=TechnologicalMap.objects.values("dish"))
+
+
 # Конкретное блюдо
 class Dish(models.Model):
     name = models.CharField("Название блюда", max_length=100, blank=False)
@@ -29,6 +34,7 @@ class Dish(models.Model):
         verbose_name="Категория",
         related_name="dishes",
     )
+    objects = DishQuerySet.as_manager()
 
     class Meta:
         verbose_name = "Блюдо"

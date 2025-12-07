@@ -52,7 +52,6 @@ def get_menu_nutrients(menu):
     """
     result = {"calories": 0, "proteins": 0, "fats": 0, "carbohydrates": 0}
     menu_composition = MenuRequirementComposition.objects.filter(menu_requirement=menu)
-    no_tm = []
     for element in menu_composition:
         try:
             tm = element.dish.technological_maps.actual()
@@ -63,9 +62,9 @@ def get_menu_nutrients(menu):
             result["carbohydrates"] += tm.carbohydrates
 
         except AttributeError:
-            no_tm.append(element.dish)
+            pass
 
-    return result, no_tm
+    return result
 
 
 def get_cycle_menu_day_composition(week_number, week_day, student_feeding_category):
