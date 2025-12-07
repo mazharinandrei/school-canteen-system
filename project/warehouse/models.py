@@ -4,9 +4,6 @@ from django.db import models
 from dishes.models import Product
 
 
-# Create your models here.
-
-
 class Warehouse(models.Model):  # Склад
     name = models.CharField("Наименование склада", max_length=100)
     address = models.CharField("Адрес склада", max_length=100)

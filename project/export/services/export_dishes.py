@@ -15,7 +15,7 @@ def generate_dishes_file():  # TODO сделать проверку на нал�
         return file_path
 
     for dish in Dish.objects.all().order_by("category").values():
-        print(dish)
+
         category = FoodCategory.objects.filter(id=dish["category_id"]).first().name
         result.append({"name": dish["name"], "category": category})
 

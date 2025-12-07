@@ -130,7 +130,7 @@ class NewWriteOffForm(forms.Form):
 
     def is_valid(self):
         valid = super(NewWriteOffForm, self).is_valid()
-        print(self.cleaned_data)
+
         if is_volume_more_than_availability(
             self.cleaned_data["product"],
             self.cleaned_data["warehouse"],
@@ -147,7 +147,7 @@ class NewWriteOffForm(forms.Form):
         return valid
 
     def save(self):
-        print(self.cleaned_data)
+
         data = self.cleaned_data
         try:
             write_off_from_warehouse(
@@ -158,7 +158,7 @@ class NewWriteOffForm(forms.Form):
                 note=data["note"],
             )
         except Exception as e:
-            print(e)
+
             self.add_error("product", e)
 
         return data

@@ -131,24 +131,33 @@ def get_detailed_table():
 def get_products_by_categories(data=False):
     if not data:
         data = categorize_data_by_abc_xyz(get_abc_analysis_data())
-    ax = data[(data["Категория A/B/C"] == "A") & (data["Категория X/Y/Z"] == "X")].index
-    ay = data[(data["Категория A/B/C"] == "A") & (data["Категория X/Y/Z"] == "Y")].index
-    az = data[(data["Категория A/B/C"] == "A") & (data["Категория X/Y/Z"] == "Z")].index
-    bx = data[(data["Категория A/B/C"] == "B") & (data["Категория X/Y/Z"] == "X")].index
-    by = data[(data["Категория A/B/C"] == "B") & (data["Категория X/Y/Z"] == "Y")].index
-    bz = data[(data["Категория A/B/C"] == "B") & (data["Категория X/Y/Z"] == "Z")].index
-    cx = data[(data["Категория A/B/C"] == "C") & (data["Категория X/Y/Z"] == "X")].index
-    cy = data[(data["Категория A/B/C"] == "C") & (data["Категория X/Y/Z"] == "Y")].index
-    cz = data[(data["Категория A/B/C"] == "C") & (data["Категория X/Y/Z"] == "Z")].index
 
     return {
-        "ax": ax,
-        "ay": ay,
-        "az": az,
-        "bx": bx,
-        "by": by,
-        "bz": bz,
-        "cx": cx,
-        "cy": cy,
-        "cz": cz,
+        "ax": data[
+            (data["Категория A/B/C"] == "A") & (data["Категория X/Y/Z"] == "X")
+        ].index,
+        "ay": data[
+            (data["Категория A/B/C"] == "A") & (data["Категория X/Y/Z"] == "Y")
+        ].index,
+        "az": data[
+            (data["Категория A/B/C"] == "A") & (data["Категория X/Y/Z"] == "Z")
+        ].index,
+        "bx": data[
+            (data["Категория A/B/C"] == "B") & (data["Категория X/Y/Z"] == "X")
+        ].index,
+        "by": data[
+            (data["Категория A/B/C"] == "B") & (data["Категория X/Y/Z"] == "Y")
+        ].index,
+        "bz": data[
+            (data["Категория A/B/C"] == "B") & (data["Категория X/Y/Z"] == "Z")
+        ].index,
+        "cx": data[
+            (data["Категория A/B/C"] == "C") & (data["Категория X/Y/Z"] == "X")
+        ].index,
+        "cy": data[
+            (data["Категория A/B/C"] == "C") & (data["Категория X/Y/Z"] == "Y")
+        ].index,
+        "cz": data[
+            (data["Категория A/B/C"] == "C") & (data["Категория X/Y/Z"] == "Z")
+        ].index,
     }

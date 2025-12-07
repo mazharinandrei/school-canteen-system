@@ -17,10 +17,6 @@ from .forms import (
 
 from .models import FoodCategory, Dish, TechnologicalMap, TechnologicalMapComposition
 
-"""
-LIST VIEWS
-"""
-
 
 class FoodCategoryListView(ProjectBaseListView):
     model = FoodCategory

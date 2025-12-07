@@ -42,7 +42,7 @@ def get_menu_product_composition(menu):
             cost = None
 
         result.append({"product": key, "volume": value, "cost": cost})
-        print({"product": key, "volume": value, "cost": cost})
+
     return result
 
 
@@ -81,8 +81,8 @@ def get_cycle_menu_day_composition(week_number, week_day, student_feeding_catego
 
             dishes = CycleMenuComposition.objects.filter(cycle_menu_day=cycle_menu)
             result.append({"meal_type": meal_type, "dishes": dishes})
-        except Exception as e:
-            print(e)
+        except Exception:
+
             pass
 
     return result

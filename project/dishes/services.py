@@ -37,6 +37,6 @@ def get_cost_of_dish(dish, grams=100, ignore_zero_cost=False):
             else:
                 return 0
         return cost
-    except Exception as e:
-        print(e)
+    except Exception:
+
         return 0

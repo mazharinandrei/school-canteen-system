@@ -62,9 +62,6 @@ def products_calc_by_date_interval(
 
                             availability = availability.volume
 
-                        print(
-                            f"{volume_for_planned_count} и {availability}, нужно: {volume_for_planned_count - availability}"
-                        )
                         if (volume_for_planned_count - availability) > 0:
                             volume_for_planned_count = (
                                 volume_for_planned_count - availability

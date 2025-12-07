@@ -12,8 +12,6 @@ from .models import (
     ApplicationForStudentMeals,
 )
 
-# Register your models here.
-
 admin.site.register(MealType)
 
 admin.site.register(StudentFeedingCategory)

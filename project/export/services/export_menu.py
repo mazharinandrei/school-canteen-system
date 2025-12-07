@@ -98,7 +98,7 @@ def create_menu_file(ws, data):
     insert_menu_data(ws, data)
 
     filepath = f"export/exported_files/menu/Меню {student_feeding_category} {date}.xlsx"
-    print(f"create_menu_file:{filepath}")
+
     return filepath
 
 

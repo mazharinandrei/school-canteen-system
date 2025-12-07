@@ -2,9 +2,6 @@ from django.db import models
 from django.urls import reverse
 
 
-# Create your models here.
-
-
 class Positions(models.Model):
     name = models.CharField("Должность", max_length=100)
 

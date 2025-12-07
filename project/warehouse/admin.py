@@ -11,7 +11,6 @@ from .models import (
     ProductLimit,
 )
 
-# Register your models here.
 admin.site.register(Warehouse)
 admin.site.register(Acceptance)
 admin.site.register(WriteOffCause)

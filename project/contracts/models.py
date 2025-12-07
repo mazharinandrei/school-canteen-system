@@ -15,7 +15,7 @@ class Counterparty(models.Model):  # Контрагенты
     INN = models.CharField("ИНН", max_length=12)
     KPP = models.CharField("КПП", max_length=9)
 
-    note = models.TextField(blank=True, null=True)  # Поле для примечаний
+    note = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name

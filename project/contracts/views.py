@@ -15,12 +15,6 @@ from .forms import ContractCompositionForm, ContractForm, ContractFileUploadForm
 from .models import Contract, ContractComposition, Counterparty
 
 
-# Create your views here.
-"""
-LIST VIEWS
-"""
-
-
 class CounterpartyListView(ProjectBaseListView):
     model = Counterparty
     permission_required = "contracts.view_сounterparty"
@@ -60,11 +54,6 @@ def render_contract(request, contract_id):  # TODO: to CBV
     return render(request, "contracts/contract.html", context)
 
 
-"""
-CREATE VIEW
-"""
-
-
 class CounterpartyCreateView(ProjectBaseCreateView):
     model = Counterparty
     success_url = reverse_lazy("contracts:all_counterparties")
@@ -81,11 +70,6 @@ class ContractCreateView(ParentChildrenCreateView):
 
     def get_success_url(self):
         return reverse_lazy("contracts:render_contract", args=[self.object.pk])
-
-
-"""
-DETAIL VIEW
-"""
 
 
 class CounterpartyDetailView(ProjectBaseDetailView):

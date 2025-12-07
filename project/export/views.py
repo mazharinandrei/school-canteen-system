@@ -13,9 +13,6 @@ from .services.export_tm import generate_technological_map_file
 from .services.export_write_off import generate_write_off_file
 
 
-# Create your views here.
-
-
 @permission_required("dishes.view_dish")
 def export_dishes(request):
     result_path = generate_dishes_file()

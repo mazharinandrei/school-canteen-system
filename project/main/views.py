@@ -46,7 +46,6 @@ from .services.products_calc import (
 )
 
 
-# Create your views here.
 @login_required
 def index(request):
     return render(request, "main/index.html")

@@ -1,4 +1,3 @@
-
 from django.contrib.auth.decorators import permission_required, login_required
 from django.db import transaction
 from django.http import HttpResponse
@@ -174,12 +173,12 @@ def create_write_off(request):
 
         products = request.POST.getlist("product")
         volumes = request.POST.getlist("volume")
-        print(f"volumes: {volumes}")
+
         warehouse = request.POST["warehouse"]
         note = request.POST["note"]
         cause = request.POST["cause"]
         for i in range(len(products)):
-            print(f"volume: {volumes[i]}")
+
             form = NewWriteOffForm(
                 data={
                     "product": products[i],
@@ -191,9 +190,7 @@ def create_write_off(request):
             )
 
             if form.is_valid():
-                print("form is valid")
                 form.save()
-                print("form saved")
             else:  # TODO: не нравится
                 context = {
                     "title": "Списать со склада",

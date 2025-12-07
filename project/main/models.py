@@ -7,9 +7,6 @@ from datetime import timedelta
 from django.core.validators import MinValueValidator
 
 
-# Create your models here.
-
-
 class MealType(models.Model):
     name = models.CharField("Название приёма пищи", max_length=100)
 
@@ -89,31 +86,13 @@ def list_actual_menus():
 
 class CycleMenu(models.Model):
     class WeekDay(models.IntegerChoices):
-        MONDAY = (
-            1,
-            ("Понедельник"),
-        )
-        TUESDAY = (
-            2,
-            ("Вторник"),
-        )
-        WEDNESDAY = (
-            3,
-            ("Среда"),
-        )
-        THURSDAY = (
-            4,
-            ("Четверг"),
-        )
-        FRIDAY = (
-            5,
-            ("Пятница"),
-        )
-        SATURDAY = (
-            6,
-            ("Суббота"),
-        )
-        SUNDAY = 7, ("Воскресенье")
+        MONDAY = 1, "Понедельник"
+        TUESDAY = 2, "Вторник"
+        WEDNESDAY = 3, "Среда"
+        THURSDAY = 4, "Четверг"
+        FRIDAY = 5, "Пятница"
+        SATURDAY = 6, "Суббота"
+        SUNDAY = 7, "Воскресенье"
 
     week_number = models.IntegerField("Номер недели")
     week_day = models.IntegerField("День недели", choices=WeekDay)
@@ -221,9 +200,7 @@ class MenuRequirementComposition(models.Model):
         MenuRequirement, on_delete=models.PROTECT, related_name="composition"
     )
 
-    meal_type = models.ForeignKey(
-        MealType, on_delete=models.PROTECT
-    )  # blank=True, null=True
+    meal_type = models.ForeignKey(MealType, on_delete=models.PROTECT)
 
     dish = models.ForeignKey(Dish, on_delete=models.PROTECT)
 
