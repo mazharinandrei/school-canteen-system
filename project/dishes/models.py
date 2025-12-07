@@ -34,9 +34,6 @@ class Dish(models.Model):
         verbose_name = "Блюдо"
         verbose_name_plural = "Блюда"
 
-    def get_actual_technological_map(self):
-        return self.technological_maps.filter(date__lte=localdate()).latest()
-
     def get_nutrients(self, volume=200):
         """
         Получить БЖУ блюда
@@ -46,7 +43,7 @@ class Dish(models.Model):
             :return: (calories, proteins, fats, carbohydrates)
         """
         try:
-            tm = self.get_actual_technological_map()
+            tm = self.technological_maps.actual()
             return (
                 tm.calories / 100 * volume,
                 tm.proteins / 100 * volume,
@@ -72,6 +69,11 @@ class Product(models.Model):
         verbose_name_plural = "Продукты"
 
 
+class TechnologicalMapQuerySet(models.QuerySet):
+    def actual(self):
+        return self.filter(date__lte=localdate()).latest()
+
+
 class TechnologicalMap(models.Model):
     date = models.DateField(verbose_name="ТТК актуально с даты")
     dish = models.ForeignKey(
@@ -93,6 +95,8 @@ class TechnologicalMap(models.Model):
         through="TechnologicalMapComposition",
         through_fields=("technological_map", "product"),
     )
+
+    objects = TechnologicalMapQuerySet.as_manager()
 
     def get_absolute_url(self):
         return reverse_lazy("dishes:technological_map_by_tm_id", args=[self.pk])

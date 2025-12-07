@@ -55,7 +55,7 @@ def get_menu_nutrients(menu):
     no_tm = []
     for element in menu_composition:
         try:
-            tm = element.dish.get_actual_technological_map()
+            tm = element.dish.technological_maps.actual()
 
             result["calories"] += tm.calories
             result["proteins"] += tm.proteins

@@ -109,7 +109,7 @@ def issue_menu(
         note = f'Отпуск продукта на кухню по "{menu}"'
 
     for menu_position in menu.composition.all():
-        tm = menu_position.dish.get_actual_technological_map()
+        tm = menu_position.dish.technological_maps.actual()
         for tm_position in tm.composition.all():
             product_transfer(
                 warehouse_from=warehouse_from,
@@ -141,7 +141,7 @@ def cook_menu(
         note = f'Списание продукта по "{menu}"'
 
     for menu_position in menu.composition.all():
-        tm = menu_position.dish.get_actual_technological_map()
+        tm = menu_position.dish.technological_maps.actual()
         for tm_position in tm.composition.all():
             write_off_from_warehouse(
                 warehouse=warehouse,

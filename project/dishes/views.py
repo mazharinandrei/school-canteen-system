@@ -61,7 +61,7 @@ class TechnologicalMapDetailView(ProjectBaseDetailView):
 
 def redirect_to_tm(request, dish_pk):
     dish = get_object_or_404(Dish, pk=dish_pk)
-    tm = dish.get_actual_technological_map()
+    tm = dish.technological_maps.actual()
     if dish_pk:
         return reverse_lazy("dishes:technological_map_by_tm_id", args=[tm.pk])
 

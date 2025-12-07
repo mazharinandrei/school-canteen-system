@@ -6,7 +6,7 @@ def get_dish_composition(dish, grams=100):
     """
     Получить состав блюда
     """
-    tm = dish.get_actual_technological_map()
+    tm = dish.technological_maps.actual()
     tmc = tm.composition.annotate(volume_per_portion=F("volume") / 100 * grams)
 
     for el in tmc:
