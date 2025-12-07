@@ -228,7 +228,7 @@ def on_issue_menu_button_click(request):
         )
     except NotEnoughProductToTransfer as e:
         errors.append(
-            f'На складе "{e.warehouse_name}" '
+            f'На складе "{e.warehouse_from_name}" '
             f'продукта "{e.product_name}" меньше, '
             f"чем планируется переместить на кухню"
         )

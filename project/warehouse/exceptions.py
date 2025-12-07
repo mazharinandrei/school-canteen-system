@@ -1,15 +1,14 @@
-class NotEnoughProductToTransfer(Exception):
-    def __init__(
-        self,
-        warehouse_from_name: str = None,
-        product_name: str = None,
-        custom_message: str = None,
-    ):
-        self.warehouse_from_name = warehouse_from_name
-        self.product_name = product_name
-        self.custom_message = custom_message
+from dataclasses import dataclass
 
-    def __str__(self):
+
+@dataclass
+class NotEnoughProductToTransfer(Exception):
+    warehouse_from_name: str = None
+    product_name: str = None
+    custom_message: str = None
+
+    @property
+    def message(self):
         if self.custom_message:
             return self.custom_message
         elif self.warehouse_from_name and self.product_name:
@@ -17,20 +16,17 @@ class NotEnoughProductToTransfer(Exception):
                 f'There is not enough "{self.product_name}" product '
                 f'in the "{self.warehouse_from_name}" warehouse to transfer'
             )
+        return "There is not enough product in the warehouse to transfer"
 
 
+@dataclass
 class NotEnoughProductToWriteOff(Exception):
-    def __init__(
-        self,
-        warehouse_name: str = None,
-        product_name: str = None,
-        custom_message: str = None,
-    ):
-        self.warehouse_name = warehouse_name
-        self.product_name = product_name
-        self.custom_message = custom_message
+    warehouse_name: str = None
+    product_name: str = None
+    custom_message: str = None
 
-    def __str__(self):
+    @property
+    def message(self):
         if self.custom_message:
             return self.custom_message
         elif self.warehouse_name and self.product_name:
@@ -39,4 +35,4 @@ class NotEnoughProductToWriteOff(Exception):
                 f'in the "{self.warehouse_name}" warehouse to be written off'
             )
         else:
-            return "Not enough product to write off"
+            return "There is not enough product to write off"
