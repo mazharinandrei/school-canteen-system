@@ -28,7 +28,7 @@ urlpatterns = [
         views.add_dish_to_menu_requirement,
         name="add_dish_to_menu_requirement",
     ),
-    path("cycle_menu_day/", views.render_cycle_menu_day),
+    path("cycle_menu_day/", views.render_cycle_menu_week),
     path(
         "create-cycle-menu-day/<int:student_feeding_category>&<int:week_number>&<int:week_day>",
         views.create_cycle_menu_day,

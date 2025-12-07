@@ -170,7 +170,7 @@ def render_cycle_menu(request):  # TODO: очень неочевидные ве�
 
 
 @login_required
-def render_cycle_menu_day(request):
+def render_cycle_menu_week(request):
     week_number = request.GET["week_input"]
     student_feeding_category = request.GET["category_select"]
 
@@ -193,7 +193,7 @@ def render_cycle_menu_day(request):
         "week_number": week_number,
         "student_feeding_category": student_feeding_category,
     }
-    return render(request, "main/partials/cycle_menu_day.html", context)
+    return render(request, "main/partials/cycle_menu_week.html", context)
 
 
 def create_cycle_menu_day(request, student_feeding_category, week_number, week_day):

@@ -1,8 +1,8 @@
 {% for el in m %}
 <div class="content flow">
   <h3 class="title">{{ el.week_day.1 }}</h3>
-  {% if el.composition %} {% for element in el.composition %} {% if
-  element.dishes %}
+  {% if el.composition %} {% for element in el.composition %}
+    {% if element.dishes %}
   <h5>{{ element.meal_type }}</h5>
   <ul>
     {% for dish in element.dishes %}
