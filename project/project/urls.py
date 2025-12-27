@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from project.settings import TESTING
+from project.settings import TESTING, DEBUG
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -14,7 +14,7 @@ urlpatterns = [
     path("export/", include("export.urls", namespace="export")),
 ]
 
-if not TESTING:
+if not TESTING and DEBUG:
     from debug_toolbar.toolbar import debug_toolbar_urls
 
     urlpatterns.extend(debug_toolbar_urls())
