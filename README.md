@@ -73,6 +73,8 @@ uv sync
 2. Создать и заполнить файл `.env`:
 ```
 SECRET_KEY = 'ваш_секретный_ключ'
+DJANGO_ALLOWED_HOSTS='разрешенные_хосты' # например, '127.0.0.1,localhost'
+DJANGO_DEBUG=False
 
 DB_HOST='хост_базы_данных'
 DB_USER='имя_пользователя_бд'
